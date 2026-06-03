@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Bruder Oviedo — Server</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f8f6f2;--surface:#ffffff;--surface2:#f1efe9;--surface3:#e8e5de;
+  --border:#ddd9d0;--border2:#ccc8be;
+  --text:#1a1816;--text2:#6b6560;--text3:#9c9890;
+  --amber:#c47d0a;--amber-dim:#e8a830;--amber-bg:#fef3dc;
+  --teal:#0a8a62;--teal-dim:#2db88a;--teal-bg:#e0f5ee;
+  --red:#c42020;--red-dim:#e06060;--red-bg:#fdeaea;
+  --blue:#1a6abf;--blue-dim:#60a8f5;--blue-bg:#e6f0fb;
+  --green:#0a6b3a;--green-dim:#2db870;--green-bg:#d6f0e3;
+  --pink:#b01f6a;--pink-dim:#e060a8;--pink-bg:#fde6f2;
+  --radius:16px;--radius-sm:10px;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--text)}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px 10px;border-bottom:0.5px solid var(--border);flex-shrink:0;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-dot{width:28px;height:28px;border-radius:8px;background:var(--amber);display:flex;align-items:center;justify-content:center}
+.brand-dot svg{width:14px;height:14px;fill:#fff}
+.brand-name{font-size:13px;font-weight:600;letter-spacing:0.04em}
+.brand-sub{font-size:11px;color:var(--text3)}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.lang-toggle{display:flex;border:0.5px solid var(--border2);border-radius:20px;overflow:hidden}
+.lang-btn{padding:5px 12px;font-size:12px;font-weight:500;font-family:var(--font);background:transparent;border:none;cursor:pointer;color:var(--text2);transition:all .2s}
+.lang-btn.active{background:var(--amber);color:#fff}
+.clock{font-family:var(--mono);font-size:12px;color:var(--text3);flex-shrink:0}
+.section-tabs{display:flex;gap:6px;padding:10px 20px;border-bottom:0.5px solid var(--border);flex-shrink:0;overflow-x:auto}
+.section-tabs::-webkit-scrollbar{display:none}
+.stab{flex-shrink:0;padding:7px 14px;border-radius:var(--radius-sm);border:0.5px solid var(--border);font-size:13px;font-weight:500;color:var(--text2);background:transparent;cursor:pointer;font-family:var(--font);transition:all .2s;display:flex;align-items:center;gap:6px}
+.stab-dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.7}
+.stab.active-preshift{background:var(--amber-bg);border-color:var(--amber-dim);color:var(--amber)}
+.stab.active-station{background:var(--teal-bg);border-color:var(--teal-dim);color:var(--teal)}
+.stab.active-service{background:var(--blue-bg);border-color:var(--blue-dim);color:var(--blue)}
+.stab.active-closing{background:var(--amber-bg);border-color:var(--amber-dim);color:var(--amber)}
+.stab.active-summary{background:var(--surface2);border-color:var(--border2);color:var(--text)}
+.progress-wrap{padding:10px 20px 0;flex-shrink:0}
+.progress-meta{display:flex;justify-content:space-between;margin-bottom:5px}
+.progress-label{font-size:12px;color:var(--text3)}
+.progress-count{font-family:var(--mono);font-size:12px;color:var(--text2)}
+.pbar{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:2px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.fill-preshift,.fill-closing{background:var(--amber)}
+.fill-station{background:var(--teal)}
+.fill-service{background:var(--blue)}
+.main{flex:1;overflow-y:auto;padding:12px 20px 100px;-webkit-overflow-scrolling:touch}
+.main::-webkit-scrollbar{width:3px}
+.main::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.block-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;animation:fadeIn .18s ease both}
+.block-head{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none;flex-wrap:wrap}
+.block-time{font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+.bt-preshift,.bt-closing{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-dim)}
+.bt-station{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-dim)}
+.bt-service{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-dim)}
+.bt-critical{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-dim)}
+.bt-sales{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-dim)}
+.block-title{flex:1;font-size:15px;font-weight:500;line-height:1.3}
+.block-badge{font-family:var(--mono);font-size:11px;color:var(--text3);flex-shrink:0}
+.chevron-icon{color:var(--text3);font-size:18px;transition:transform .25s;flex-shrink:0;line-height:1}
+.block-body{border-top:0.5px solid var(--border)}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .15s;-webkit-user-select:none}
+.check-item:last-child{border-bottom:none}
+.check-item:active{background:var(--surface2)}
+.check-item.done{opacity:.4}
+.check-item.done .ci-text{text-decoration:line-through}
+.ci-box{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ci-box.checked{background:var(--teal);border-color:var(--teal)}
+.ci-box.checked-amber{background:var(--amber);border-color:var(--amber)}
+.ci-check{display:none;width:11px;height:11px}
+.ci-box.checked .ci-check,.ci-box.checked-amber .ci-check{display:block}
+.ci-check path{stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.step-num{font-size:11px;font-weight:600;font-family:var(--mono);padding:2px 7px;border-radius:5px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.sn-amber{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-dim)}
+.sn-blue{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-dim)}
+.sn-green{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-dim)}
+.sn-teal{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-dim)}
+.sn-none{background:var(--surface2);color:var(--text3);border:0.5px solid var(--border)}
+.ci-text{font-size:14px;line-height:1.5;color:var(--text);flex:1}
+.policy-banner{border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;line-height:1.5;font-weight:500}
+.policy-red{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-dim)}
+.policy-green{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-dim)}
+.speech-box{background:var(--teal-bg);border:0.5px solid var(--teal-dim);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px}
+.speech-label{font-size:11px;font-weight:600;color:var(--teal);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px}
+.speech-text{font-size:14px;line-height:1.7;color:var(--text)}
+.speech-note{font-size:13px;color:var(--text2);margin-top:8px;padding-top:8px;border-top:0.5px solid var(--teal-dim)}
+.lastcall-banner{background:var(--red-bg);border:0.5px solid var(--red-dim);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:10px;line-height:1.6;font-weight:500}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.res-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px}
+.res-val{font-size:30px;font-weight:600;font-family:var(--mono)}
+.res-lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.res-total{grid-column:1/-1}
+.pend-title{font-size:11px;font-weight:500;color:var(--text3);margin-bottom:10px;letter-spacing:0.05em;text-transform:uppercase}
+.pend-item{display:flex;gap:8px;align-items:flex-start;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:13px;line-height:1.4}
+.pend-item:last-child{border-bottom:none}
+.pend-time{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;background:var(--surface2);color:var(--text3);white-space:nowrap;flex-shrink:0;margin-top:1px}
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;padding:10px 20px 24px;background:linear-gradient(transparent,var(--bg) 40%);display:flex;gap:8px}
+.btn-action{padding:11px 16px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);font-size:13px;font-weight:500;color:var(--text);background:var(--surface);cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px;transition:all .2s;flex:1;justify-content:center;min-height:44px}
+.btn-action:active{transform:scale(0.97)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="login-screen" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px">
+  <div style="width:100%;max-width:340px">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="width:64px;height:64px;border-radius:18px;background:#0a8a62;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px;box-shadow:0 4px 20px rgba(0,0,0,.15)">🍺</div>
+      <div style="font-size:22px;font-weight:600;color:var(--text)">Mesero · Server</div>
+      <div style="font-size:13px;color:var(--text3);margin-top:4px">Bruder Oviedo &middot; 1280 Oviedo Mall</div>
+    </div>
+    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 2px 16px rgba(0,0,0,.06)">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">¿Cómo te llamas?</label>
+        <input id="login-name" type="text" placeholder="Tu nombre" autocomplete="name"
+          style="width:100%;padding:14px;border:0.5px solid var(--border2);border-radius:10px;font-family:var(--font);font-size:16px;color:var(--text);background:var(--surface2);outline:none;-webkit-appearance:none"
+          oninput="loginCheck()" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-error" style="display:none;font-size:12px;color:var(--red);padding:8px 12px;background:var(--red-bg);border-radius:8px;text-align:center"></div>
+      <button id="login-btn" onclick="doLogin()" disabled
+        style="width:100%;padding:15px;border-radius:10px;border:none;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;background:var(--border2);color:var(--text3);opacity:.6">
+        Comenzar turno &rarr;
+      </button>
+    </div>
+  </div>
+</div>
+
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-dot"><svg viewBox="0 0 14 14"><circle cx="7" cy="4.5" r="2"/><path d="M3.5 11c0-2 1.567-3 3.5-3s3.5 1 3.5 3"/></svg></div>
+      <div>
+        <div class="brand-name">Bruder Oviedo</div>
+        <div class="brand-sub" id="top-subtitle">Server Checklist</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+        <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+      </div>
+      <div class="clock" id="clock">--:--</div>
+    </div>
+  </div>
+
+  <div class="section-tabs" id="section-tabs"></div>
+
+  <div class="progress-wrap" id="prog-wrap">
+    <div class="progress-meta">
+      <span class="progress-label" id="prog-label">Pre-Shift</span>
+      <span class="progress-count" id="prog-count">0 / 0</span>
+    </div>
+    <div class="pbar"><div class="pbar-fill fill-preshift" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="main" id="main-content"></div>
+
+  <div class="bottom-bar">
+    <button class="btn-action" onclick="resetAll()" id="btn-reset">↺ New day</button>
+    <button class="btn-action" onclick="window.print()" id="btn-print">⎙ Print</button>
+    <button class="btn-action" style="background:var(--teal-bg);border-color:var(--teal-dim);color:var(--teal);flex:none;padding:11px 14px" onclick="saveShift()" id="btn-save">💾</button>
+  </div>
+</div>
+
+<script>
+let lang='en', curSection='preshift', checks={};
+
+const T={
+  en:{
+    subtitle:'Server Checklist',
+    preshift:'Pre-Shift', station:'Station', service:'Service', closing:'Closing', summary:'Summary',
+    reset:'↺ New day', print:'⎙ Print',
+    pending:"Today's pending", allDone:'✓ All tasks completed',
+    date:'Date:', name:'Name:', zone:'Zone:', signature:'Signature:', manager:'Manager:',
+    tasks:' tasks',
+    policy_water:'⚠  BRUDER POLICY: Do NOT bring water automatically. Always offer drinks from the menu. Water only if the guest requests it.',
+    policy_sales:'💰  SALES MINDSET: Every table visit is an opportunity — drinks, rounds, desserts. Always push the sale with a smile.',
+    speech_label:'BRUDER WELCOME SPEECH',
+    speech_main:'"Welcome to Bruder! My name is ___________. We make our beers using German techniques and add exotic, tropical ingredients. Would you like to try a beer to start?"',
+    speech_note:'If they ask what beers we have: "We have Maracuyá, Chocolate, Pineapple, Barley Wine, IPA, Stout... We also have a delicious cocktail menu and non-alcoholic options."',
+    lastcall:'⏰  Watch for LAST CALL: Food · Pizza · Bar — see exact times on manager\'s board',
+  },
+  es:{
+    subtitle:'Planilla del Mesero',
+    preshift:'Pre-Turno', station:'Estación', service:'Servicio', closing:'Cierre', summary:'Resumen',
+    reset:'↺ Nuevo día', print:'⎙ Imprimir',
+    pending:'Pendientes de hoy', allDone:'✓ Todas las tareas completadas',
+    date:'Fecha:', name:'Nombre:', zone:'Zona:', signature:'Firma:', manager:'Manager:',
+    tasks:' tareas',
+    policy_water:'⚠  POLÍTICA BRUDER: NO se lleva agua automáticamente. Siempre ofrecer bebidas de la carta. El agua solo si el cliente la solicita.',
+    policy_sales:'💰  MENTALIDAD DE VENTA: Cada visita a la mesa es una oportunidad — bebidas, rondas, postres. Presionar siempre la venta con amabilidad.',
+    speech_label:'SPEECH DE BIENVENIDA BRUDER',
+    speech_main:'"¡Bienvenidos a Bruder! Me llamo ___________. Hacemos nuestras cervezas con técnicas alemanas y adicionamos ingredientes exóticos y tropicales. ¿Quieren probar alguna cerveza para empezar?"',
+    speech_note:'Si preguntan qué cervezas hay: "Tenemos Maracuyá, Chocolate, Piña, Barley Wine, IPA, Stout... También una carta de cócteles y bebidas sin alcohol para acompañar la comida."',
+    lastcall:'⏰  Estar atento a los últimos llamados: Comida · Pizza · Barra — ver horas exactas en la planilla del manager',
+  }
+};
+
+const SECTIONS=['preshift','station','service','closing','summary'];
+
+const DATA={
+  preshift:[
+    {type:'preshift', title:{en:'Pre-Shift — Arrive 10 min early',es:'Pre-Turno — Llegar 10 min antes'}, numbered:true, items:[
+      {n:'1', en:'Wash hands upon entering — BEFORE any task', es:'Lavarse las manos al ingresar — ANTES de cualquier tarea'},
+      {n:'2', en:'Put on apron', es:'Ponerse el delantal'},
+      {n:'3', en:'Clock in on Toast system', es:'Hacer clock-in en el sistema Toast'},
+      {n:'4', en:'Pen in pocket — required for the entire shift', es:'Tener esfero en el bolsillo — obligatorio todo el turno'},
+      {n:'5', en:'Attend manager briefing — zone assignment for the day', es:'Asistir al briefing del manager — distribución de zonas del día'},
+      {n:'6', en:'If no briefing: ask manager for assigned zone before starting', es:'Si no hay briefing: preguntar al manager la zona asignada antes de empezar'},
+      {n:'7', en:"Check reservations and table placement for the day", es:'Revisar reservas del día y la ubicación de cada mesa'},
+      {n:'8', en:'Verify Toast device is working to take orders', es:'Verificar que el dispositivo Toast esté funcionando para tomar pedidos'},
+      {n:'9', en:"Know today's 86: what's not available in kitchen and bar", es:'Conocer el 86 del día: qué no hay en cocina y qué no hay en barra'},
+    ]},
+  ],
+  station:[
+    {type:'station', title:{en:'Station Opening',es:'Apertura de Estación'}, items:[
+      {en:'Liner in service bin + spare liner available', es:'Bolsa puesta en la caneca + bolsa de repuesto disponible'},
+      {en:'Paper roll in printer + spare roll at station', es:'Rollo de papel en la impresora + rollo de repuesto en la estación'},
+      {en:'Napkins stocked and spare napkins at station', es:'Servilletas cargadas y de repuesto en la estación'},
+      {en:'Straws available', es:'Pitillos disponibles'},
+      {en:'Salt & pepper on every table — clean and spare set at station', es:'Sal y pimienta en cada mesa — limpios y salero de repuesto en la estación'},
+      {en:'Coasters at station', es:'Portavasos en la estación'},
+      {en:'Clean service cloth for the shift', es:'Trapo de turno limpio'},
+      {en:'Table spray bottle filled', es:'Spray limpiador de mesas recargado'},
+      {en:'Porcelain glasses on all tables', es:'Vasos de porcelana en todas las mesas'},
+      {en:'Table centerpieces in order', es:'Centros de mesa en orden'},
+    ]},
+  ],
+  service:[
+    {type:'service', title:{en:'Service Flow',es:'Flujo de Servicio'}, speech:true, items:[
+      {n:'①', style:'blue', en:'Take drink order from the menu — do NOT bring water automatically', es:'Tomar orden de bebidas de la carta — NO llevar agua automáticamente'},
+      {n:'②', style:'blue', en:'Present food menu + communicate the 86 before they order', es:'Presentar la carta de comida + comunicar el 86 del día antes de que ordenen'},
+      {n:'③', style:'blue', en:'Take food order — repeat to confirm with the guest', es:'Tomar orden de comida — repetir para confirmar con el cliente'},
+      {n:'④', style:'blue', en:"Remove FOOD menus — ask: 'Shall I leave the drink menu so you can keep browsing?'", es:"Retirar las cartas de COMIDA — preguntar: '¿Les dejo la carta de bebidas para seguir revisando?'"},
+      {n:'⑤', style:'blue', en:'Deliver drinks first, then starters, then entrees', es:'Entregar bebidas primero, luego entradas, luego platos fuertes'},
+      {n:'⑥', style:'blue', en:"Check back 2 min after serving: 'Everything good?' — any issue: notify manager immediately", es:"Volver 2 min después de servir: '¿Todo bien con su orden?' — si hay algún problema: avisar al manager de inmediato"},
+      {n:'⑦', style:'green', en:'💰 Offer second round when glass is less than 1/3 full — do not wait for them to ask', es:'💰 Ofrecer segunda ronda cuando quede menos de 1/3 en el vaso — no esperar a que pidan'},
+      {n:'⑧', style:'blue', en:'Clear empty plates and keep tables clean — without being asked', es:'Retirar platos vacíos y mantener mesas limpias — sin que el cliente lo pida'},
+      {n:'⑨', style:'green', en:"💰 Offer desserts when clearing entree plates: 'Would you like to see our dessert menu? We have chocolate cake and carrot cake'", es:"💰 Ofrecer postres al retirar los platos fuertes: '¿Les gustaría ver la carta de postres? Tenemos torta de chocolate y torta de zanahoria'"},
+      {n:'⑩', style:'green', en:'💰 If they order dessert: offer coffee, carajillo or digestif to accompany', es:'💰 Si piden postre: ofrecer café, carajillo o digestivo para acompañar'},
+      {n:'⑪', style:'blue', en:'Bring water ONLY if the guest requests it', es:'Llevar agua SOLO si el cliente la solicita'},
+      {n:'⑫', style:'blue', en:'Present check only when the guest asks or is getting ready to leave', es:'Presentar la cuenta solo cuando el cliente lo pida o se disponga a salir'},
+      {n:'⑬', style:'blue', en:"Farewell: 'Thank you! Hope to see you soon at Bruder'", es:"Despedir: '¡Gracias! Esperamos verlos pronto en Bruder'"},
+    ]},
+  ],
+  closing:[
+    {type:'closing', title:{en:'Zone Closing — Do while tables remain to avoid overtime',es:'Cierre de Zona — Hacer mientras quedan mesas para no generar horas extra'}, lastcall:true, items:[
+      {en:'Clean all tables and chairs in my zone', es:'Limpiar todas las mesas y sillas de mi zona'},
+      {en:'Sweep my zone', es:'Barrer mi zona'},
+      {en:'Mop my zone', es:'Trapear mi zona'},
+      {en:'Wrap cutlery: knife + fork in napkin (for next service)', es:'Envolver cubiertos: cuchillo + tenedor en servilleta (para el siguiente servicio)'},
+      {en:'Restock napkins at station', es:'Recargar servilletas en la estación'},
+      {en:'Restock coasters and cutlery at station', es:'Recargar portavasos y cubiertos en la estación'},
+      {en:'Refill table spray bottle', es:'Rellenar el spray limpiador de mesas'},
+      {en:'Take out station trash', es:'Sacar la basura de la estación'},
+      {en:'Wash service cloth and spread to dry', es:'Lavar el trapo de servicio y dejarlo extendido para secar'},
+      {en:'Return apron to manager', es:'Entregar delantal al manager'},
+      {en:'Clock out on the system', es:'Hacer clock-out en el sistema'},
+    ]},
+  ],
+};
+
+function t(k){return T[lang][k]||T.en[k]||k;}
+function styleClass(s){return{blue:'sn-blue',green:'sn-green',teal:'sn-teal',amber:'sn-amber'}[s]||'sn-none';}
+
+function getBlocks(s){return DATA[s]||[];}
+
+function buildTabs(){
+  const tabs=document.getElementById('section-tabs');
+  tabs.innerHTML=SECTIONS.map(s=>{
+    const label=t(s);
+    const active=s===curSection?`active-${s}`:'';
+    return`<button class="stab ${active}" onclick="switchSection('${s}',this)"><span class="stab-dot"></span>${label}</button>`;
+  }).join('');
+}
+
+function render(){
+  buildTabs();
+  document.getElementById('top-subtitle').textContent=t('subtitle');
+  document.getElementById('btn-reset').textContent=t('reset');
+  document.getElementById('btn-print').textContent=t('print');
+  if(curSection==='summary'){renderSummary();document.getElementById('prog-wrap').style.display='none';return;}
+  document.getElementById('prog-wrap').style.display='block';
+  const main=document.getElementById('main-content');
+  const blocks=getBlocks(curSection);
+  let html='';
+  blocks.forEach((block,bi)=>{
+    const title=block.title[lang]||block.title.en;
+    const total=block.items.length;
+    const done=block.items.filter((_,ii)=>checks[curSection+'_'+bi+'_'+ii]).length;
+    html+=`<div class="block-card">
+      <div class="block-head" onclick="toggleBlock('${curSection}_${bi}')">
+        <span class="block-time bt-${block.type}">${title}</span>
+        <span class="block-badge">${done}/${total}</span>
+        <span class="chevron-icon" id="chev-${curSection}_${bi}">⌄</span>
+      </div>
+      <div class="block-body" id="body-${curSection}_${bi}">`;
+    if(block.speech){
+      html+=`<div style="padding:12px 16px;border-bottom:0.5px solid var(--border)">
+        <div class="policy-banner policy-red">${t('policy_water')}</div>
+        <div class="policy-banner policy-green">${t('policy_sales')}</div>
+        <div class="speech-box">
+          <div class="speech-label">${t('speech_label')}</div>
+          <div class="speech-text">${t('speech_main')}</div>
+          <div class="speech-note">${t('speech_note')}</div>
+        </div>
+      </div>`;
+    }
+    if(block.lastcall){
+      html+=`<div class="lastcall-banner" style="margin:12px 16px 0">${t('lastcall')}</div>`;
+    }
+    block.items.forEach((item,ii)=>{
+      const key=curSection+'_'+bi+'_'+ii;
+      const isDone=checks[key]||false;
+      const txt=item[lang]||item.en;
+      const isClosing=curSection==='closing';
+      if(block.numbered){
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${isDone?'checked':''}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 11 11"><path d="M1.5 5.5l3 3 5-5"/></svg></div>
+          <span class="step-num sn-amber">${item.n}</span>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      } else if(item.n){
+        const sc=styleClass(item.style);
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${isDone?(isClosing?'checked-amber':'checked'):''}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 11 11"><path d="M1.5 5.5l3 3 5-5"/></svg></div>
+          <span class="step-num ${sc}">${item.n}</span>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      } else {
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${isDone?(isClosing?'checked-amber':'checked'):''}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 11 11"><path d="M1.5 5.5l3 3 5-5"/></svg></div>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      }
+    });
+    html+=`</div></div>`;
+  });
+  main.innerHTML=html;
+  updateProgress();
+}
+
+function toggleBlock(id){
+  const body=document.getElementById('body-'+id);
+  const chev=document.getElementById('chev-'+id);
+  if(!body)return;
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  if(chev)chev.style.transform=isOpen?'rotate(-90deg)':'rotate(0deg)';
+}
+
+function toggleCheck(key){
+  checks[key]=!checks[key];
+  render();
+}
+
+function countSection(s){
+  const blocks=getBlocks(s);
+  let total=0,done=0;
+  blocks.forEach((b,bi)=>b.items.forEach((_,ii)=>{total++;if(checks[s+'_'+bi+'_'+ii])done++;}));
+  return{total,done};
+}
+
+function updateProgress(){
+  if(curSection==='summary')return;
+  const{total,done}=countSection(curSection);
+  const pct=total>0?Math.round(done/total*100):0;
+  const fill=document.getElementById('prog-fill');
+  fill.style.width=pct+'%';
+  fill.className='pbar-fill fill-'+curSection;
+  document.getElementById('prog-count').textContent=done+' / '+total+t('tasks');
+  document.getElementById('prog-label').textContent=t(curSection);
+}
+
+function renderSummary(){
+  const main=document.getElementById('main-content');
+  let html='<div class="res-grid">';
+  let gt=0,gd=0;
+  const secConfig=[
+    {k:'preshift',c:'var(--amber)'},
+    {k:'station',c:'var(--teal)'},
+    {k:'service',c:'var(--blue)'},
+    {k:'closing',c:'var(--amber)'},
+  ];
+  secConfig.forEach(s=>{
+    const{total,done}=countSection(s.k);
+    gt+=total;gd+=done;
+    const pct=total>0?Math.round(done/total*100):0;
+    html+=`<div class="res-card"><div class="res-val" style="color:${s.c}">${pct}%</div><div class="res-lbl">${t(s.k)} · ${done}/${total}</div></div>`;
+  });
+  const tp=gt>0?Math.round(gd/gt*100):0;
+  html+=`<div class="res-card res-total"><div class="res-val">${tp}%</div><div class="res-lbl">${t('summary')} · ${gd}/${gt}</div></div></div>`;
+  html+=`<div class="pend-title">${t('pending')}</div>`;
+  let any=false;
+  ['preshift','station','service','closing'].forEach(s=>{
+    getBlocks(s).forEach((block,bi)=>{
+      block.items.forEach((item,ii)=>{
+        if(!checks[s+'_'+bi+'_'+ii]){
+          any=true;
+          const txt=item[lang]||item.en;
+          const sec=t(s);
+          html+=`<div class="pend-item">
+            <span class="pend-time">${sec}</span>
+            <span style="font-size:13px;color:var(--text2);flex:1">${txt}</span>
+          </div>`;
+        }
+      });
+    });
+  });
+  if(!any)html+=`<div style="padding:14px 0;font-size:14px;color:var(--teal)">${t('allDone')}</div>`;
+  html+=`<div style="margin-top:18px;padding:12px 14px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text3);line-height:2">
+    ${t('name')} ________________________________<br>
+    ${t('zone')} BZ · LZ · DR · B · P &nbsp;&nbsp;&nbsp; ${t('date')} ________________<br>
+    ${t('signature')} _______________________________ &nbsp; ${t('manager')} _______________________________
+  </div>`;
+  main.innerHTML=html;
+}
+
+function switchSection(name,btn){
+  curSection=name;render();
+}
+
+function setLang(l,btn){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function resetAll(){
+  const msg=lang==='en'?'Reset all tasks for today?':'¿Reiniciar todas las tareas del día?';
+  if(!confirm(msg))return;
+  checks={};render();
+}
+
+function updateClock(){
+  const now=new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent=h+':'+m;
+}
+setInterval(updateClock,1000);
+updateClock();
+render();
+</script>
+
+<div id="save-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch">
+  <div style="background:var(--bg);border-radius:var(--radius);max-width:560px;margin:0 auto;padding:18px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:600;color:var(--text)" id="modal-title">Shift Summary</div>
+      <button onclick="closeModal()" style="font-size:24px;background:none;border:none;cursor:pointer;color:var(--text2);line-height:1;padding:0 4px">×</button>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;font-family:var(--mono);font-size:11px;line-height:1.9;white-space:pre-wrap;border:0.5px solid var(--border);max-height:360px;overflow-y:auto" id="summary-text"></div>
+    <div style="margin-top:12px;font-size:11px;color:var(--text3);line-height:1.6;background:var(--teal-bg);border-radius:var(--radius-sm);padding:10px 12px;border:0.5px solid var(--teal-dim)" id="modal-hint"></div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button onclick="copySummary()" id="copy-btn" style="flex:1;padding:12px;border-radius:var(--radius-sm);background:var(--teal-bg);border:0.5px solid var(--teal-dim);color:var(--teal);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);min-height:44px">📋 Copy</button>
+      <button onclick="closeModal()" id="close-btn" style="flex:1;padding:12px;border-radius:var(--radius-sm);background:var(--surface);border:0.5px solid var(--border2);color:var(--text2);font-size:13px;cursor:pointer;font-family:var(--font);min-height:44px">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function saveShift() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  const timeStr = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  const dayLabel = dayMode==='weekday'||dayMode==='semana' ? 'Tue-Thu / Mar-Jue' : 'Fri-Sun / Vie-Dom';
+  const lines = [];
+  lines.push('=======================================');
+  lines.push('BRUDER OVIEDO — SERVER SHIFT SUMMARY');
+  lines.push('=======================================');
+  lines.push('Date: '+dateStr+'  Time: '+timeStr);
+  lines.push('Shift: '+dayLabel+'  Lang: '+lang.toUpperCase());
+  lines.push('---------------------------------------');
+  let totalDone=0,totalAll=0;
+  const keys = ['preshift','station','service','closing'];
+  keys.forEach(s=>{
+    const blocks = typeof getBlocks==='function' ? getBlocks(s) : (DATA[s]||[]);
+    if(!blocks||!blocks.length) return;
+    let sd=0,st=0;
+    blocks.forEach((b,bi)=>b.items.forEach((_,ii)=>{st++;totalAll++;if(checks[s+'_'+bi+'_'+ii]){sd++;totalDone++;}}));
+    const pct=st>0?Math.round(sd/st*100):0;
+    const icon=pct===100?'[OK]':pct>=70?'[~]':'[X]';
+    const lbl=(T[lang][s]||s).toUpperCase();
+    lines.push(icon+' '+lbl+': '+sd+'/'+st+' ('+pct+'%)');
+    blocks.forEach((b,bi)=>b.items.forEach((item,ii)=>{
+      if(!checks[s+'_'+bi+'_'+ii]){
+        const txt=item[lang]||item.en||item||'';
+        lines.push('  x '+String(txt).substring(0,55)+(String(txt).length>55?'...':''));
+      }
+    }));
+  });
+  lines.push('---------------------------------------');
+  const pct=totalAll>0?Math.round(totalDone/totalAll*100):0;
+  lines.push('TOTAL: '+totalDone+'/'+totalAll+' ('+pct+'%)');
+  const grade=pct===100?'EXCELLENT / EXCELENTE':pct>=85?'GOOD / BIEN':pct>=70?'NEEDS IMPROVEMENT / MEJORAR':'BELOW STANDARD / BAJO ESTANDAR';
+  lines.push('GRADE: '+grade);
+  lines.push('=======================================');
+  lines.push('Notes:');
+  lines.push('');
+  lines.push('Signature: _________________________');
+  document.getElementById('summary-text').textContent=lines.join('\n');
+  const isEn=lang==='en';
+  document.getElementById('modal-title').textContent=isEn?'Shift Summary — Paste in Google Sheets':'Resumen de Turno — Pegar en Google Sheets';
+  document.getElementById('copy-btn').textContent=isEn?'📋 Copy to clipboard':'📋 Copiar';
+  document.getElementById('close-btn').textContent=isEn?'Close':'Cerrar';
+  document.getElementById('modal-hint').innerHTML=isEn
+    ?'<b>How to save:</b> 1) Copy  2) Open Google Sheets  3) Click a cell  4) Paste (Ctrl+V)'
+    :'<b>Cómo guardar:</b> 1) Copiar  2) Abrir Google Sheets  3) Clic en una celda  4) Pegar (Ctrl+V)';
+  document.getElementById('save-modal').style.display='block';
+}
+function copySummary(){
+  const txt=document.getElementById('summary-text').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn=document.getElementById('copy-btn');
+    const orig=btn.textContent;
+    btn.textContent=lang==='en'?'✓ Copied!':'✓ ¡Copiado!';
+    btn.style.background='var(--teal)';btn.style.color='#fff';
+    setTimeout(()=>{btn.textContent=orig;btn.style.background='var(--teal-bg)';btn.style.color='var(--teal)';},2500);
+  });
+}
+function closeModal(){document.getElementById('save-modal').style.display='none';}
+</script>
+
+
+
+
+
+<script>
+// ══ LOGIN + PERSONALIZACIÓN — BRUDER OVIEDO ══
+(function(){
+  var ROLE_COLOR = '#0a8a62';
+  var ROLE_NAME  = 'mesero';
+  var today = new Date().toDateString();
+
+  var DAYS_ES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  var MONTHS_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  function getFechaStr(){
+    var d = new Date();
+    return DAYS_ES[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS_ES[d.getMonth()];
+  }
+
+  function getGreeting(){
+    var h = new Date().getHours();
+    if(h < 12) return '☀️ Buenos días';
+    if(h < 18) return '🌤 Buenas tardes';
+    return '🌙 Buenas noches';
+  }
+
+  function getSaved(){ 
+    try{ return JSON.parse(localStorage.getItem('bruder_user_'+ROLE_NAME)||'null'); }
+    catch(e){return null;} 
+  }
+
+  function getFirstName(name){
+    return name.split(' ')[0];
+  }
+
+  function personalizeApp(name){
+    var first = getFirstName(name);
+    var fecha = getFechaStr();
+    var greeting = getGreeting();
+
+    // 1. Update brand-name in topbar with greeting
+    var brandName = document.querySelector('.brand-name');
+    if(brandName){
+      brandName.innerHTML = 'Mesero · Server';
+    }
+
+    // 2. Update brand-sub with personalized greeting
+    var brandSub = document.querySelector('.brand-sub');
+    if(brandSub){
+      brandSub.textContent = greeting + ', ' + first + ' · ' + fecha;
+    }
+
+    // 3. If there's a top-subtitle span (Server app)
+    var topSub = document.getElementById('top-subtitle');
+    if(topSub){
+      topSub.textContent = greeting + ', ' + first + ' · ' + fecha;
+    }
+
+    // 4. Update page title
+    document.title = 'Mesero · Server · ' + first;
+  }
+
+  function injectUserBadge(name){
+    var right = document.querySelector('.topbar-right');
+    if(!right) return;
+    var old = document.getElementById('user-badge');
+    if(old) old.remove();
+    var initials = name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2);
+    var badge = document.createElement('div');
+    badge.id = 'user-badge';
+    badge.style.cssText = 'display:flex;align-items:center;gap:7px;padding:5px 12px 5px 6px;border-radius:20px;background:var(--surface2);border:0.5px solid var(--border2);cursor:pointer;font-size:12px;color:var(--text2);flex-shrink:0';
+    badge.innerHTML = '<div style="width:26px;height:26px;border-radius:50%;background:'+ROLE_COLOR+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">'+initials+'</div><span style="font-weight:500;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+name.split(' ')[0]+'</span>';
+    badge.onclick = function(){
+      if(confirm('¿Cambiar de usuario?')){
+        localStorage.removeItem('bruder_user_'+ROLE_NAME);
+        location.reload();
+      }
+    };
+    right.insertBefore(badge, right.firstChild);
+  }
+
+  // ── Check existing session ──
+  var saved = getSaved();
+  if(saved && saved.date === today && saved.name){
+    var ls = document.getElementById('login-screen');
+    if(ls) ls.style.display = 'none';
+    injectUserBadge(saved.name);
+    // Wait for DOM then personalize
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ personalizeApp(saved.name); });
+    } else {
+      personalizeApp(saved.name);
+    }
+  }
+
+  window.loginCheck = function(){
+    var n = (document.getElementById('login-name').value||'').trim();
+    var btn = document.getElementById('login-btn');
+    var valid = n.length >= 2;
+    btn.disabled = !valid;
+    btn.style.background = valid ? ROLE_COLOR : '';
+    btn.style.color = valid ? '#fff' : '';
+    btn.style.opacity = valid ? '1' : '.6';
+  };
+
+  window.doLogin = function(){
+    var n = (document.getElementById('login-name').value||'').trim();
+    var errEl = document.getElementById('login-error');
+    if(!n || n.length < 2){ showErr('Ingresa tu nombre'); return; }
+    localStorage.setItem('bruder_user_'+ROLE_NAME, JSON.stringify({name:n, date:today}));
+    var ls = document.getElementById('login-screen');
+    ls.style.transition = 'opacity .3s ease';
+    ls.style.opacity = '0';
+    setTimeout(function(){ ls.style.display='none'; }, 320);
+    injectUserBadge(n);
+    personalizeApp(n);
+  };
+
+  function showErr(msg){
+    var el = document.getElementById('login-error');
+    el.textContent = msg; el.style.display = 'block';
+    setTimeout(function(){ el.style.display='none'; }, 3000);
+  }
+})();
+</script>
+
+</body>
+</html>
