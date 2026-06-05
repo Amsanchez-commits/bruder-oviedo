@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Bruder Oviedo — Staff</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f8f6f2;--surface:#fff;--surface2:#f1efe9;--surface3:#e8e5de;
+  --border:#ddd9d0;--border2:#ccc8be;
+  --text:#1a1816;--text2:#6b6560;--text3:#9c9890;
+  --amber:#c47d0a;--amber-dim:#e8a830;--amber-bg:#fef3dc;
+  --teal:#0a8a62;--teal-dim:#2db88a;--teal-bg:#e0f5ee;
+  --red:#c42020;--red-dim:#e06060;--red-bg:#fdeaea;
+  --blue:#1a6abf;--blue-dim:#60a8f5;--blue-bg:#e6f0fb;
+  --pink:#b01f6a;--pink-dim:#e060a8;--pink-bg:#fde6f2;
+  --purple:#6040c0;--purple-dim:#9070e0;--purple-bg:#f0ecff;
+  --green:#0a7a3a;--green-dim:#2db870;--green-bg:#e0f5ea;
+  --dark:#1a1816;
+  --radius:16px;--radius-sm:10px;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+html,body{width:100%;height:100%;background:var(--bg);font-family:var(--font);color:var(--text);overflow:hidden}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--border);flex-shrink:0;gap:8px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-dot{width:26px;height:26px;border-radius:8px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:13px}
+.brand-name{font-size:13px;font-weight:600;color:var(--text)}
+.brand-sub{font-size:10px;color:var(--text3)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.lang-toggle{display:flex;border:0.5px solid var(--border2);border-radius:20px;overflow:hidden}
+.lang-btn{padding:5px 11px;font-size:11px;font-weight:600;font-family:var(--font);background:transparent;border:none;cursor:pointer;color:var(--text3);transition:all .2s}
+.lang-btn.active{background:var(--dark);color:#fff}
+.clock{font-family:var(--mono);font-size:11px;color:var(--text3)}
+
+/* ── ROLE SELECTOR ── */
+.role-screen{flex:1;overflow-y:auto;padding:20px 16px 32px;display:flex;flex-direction:column;align-items:center}
+.role-hero{text-align:center;margin-bottom:28px}
+.role-hero-title{font-size:28px;font-weight:600;color:var(--text);margin-bottom:4px}
+.role-hero-sub{font-size:13px;color:var(--text2)}
+.role-datetime{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 14px;border:0.5px solid var(--border);border-radius:20px;font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--surface)}
+.dt-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+.role-cards{width:100%;max-width:420px;display:flex;flex-direction:column;gap:10px}
+.role-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;border:0.5px solid var(--border);background:var(--surface);cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.role-card:active{transform:scale(.97)}
+.role-card.manager:hover,.role-card.manager:active{border-color:var(--amber-dim);background:var(--amber-bg)}
+.role-card.server:hover,.role-card.server:active{border-color:var(--teal-dim);background:var(--teal-bg)}
+.role-card.host:hover,.role-card.host:active{border-color:var(--blue-dim);background:var(--blue-bg)}
+.role-card.runner:hover,.role-card.runner:active{border-color:var(--teal-dim);background:var(--teal-bg)}
+.rc-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.rc-icon.manager{background:var(--amber-bg);border:0.5px solid var(--amber-dim)}
+.rc-icon.server{background:var(--teal-bg);border:0.5px solid var(--teal-dim)}
+.rc-icon.host{background:var(--blue-bg);border:0.5px solid var(--blue-dim)}
+.rc-icon.runner{background:var(--teal-bg);border:0.5px solid var(--teal-dim)}
+.rc-info{flex:1}
+.rc-name{font-size:20px;font-weight:600;color:var(--text);letter-spacing:.02em}
+.rc-desc{font-size:11px;color:var(--text2);margin-top:1px}
+.rc-arrow{font-size:16px;color:var(--text3)}
+
+/* ── CHECKLIST SCREEN ── */
+.checklist-screen{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.cl-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.btn-back{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text2);flex-shrink:0}
+.cl-role-badge{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 8px;border-radius:20px;font-size:12px;font-weight:600}
+.cl-role-badge.manager{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-dim)}
+.cl-role-badge.server{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-dim)}
+.cl-role-badge.host{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-dim)}
+.cl-role-badge.runner{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-dim)}
+.cl-user{flex:1;font-size:12px;color:var(--text2);font-weight:500}
+
+/* ── SECTION TABS ── */
+.section-tabs{display:flex;gap:5px;padding:10px 16px;border-bottom:0.5px solid var(--border);flex-shrink:0;overflow-x:auto}
+.section-tabs::-webkit-scrollbar{display:none}
+.stab{flex-shrink:0;padding:7px 13px;border-radius:var(--radius-sm);border:0.5px solid var(--border);font-size:12px;font-weight:500;color:var(--text2);background:transparent;cursor:pointer;font-family:var(--font);transition:all .2s}
+.stab.active-preshift,.stab.active-apertura{background:var(--amber-bg);border-color:var(--amber-dim);color:var(--amber)}
+.stab.active-station,.stab.active-servicio{background:var(--teal-bg);border-color:var(--teal-dim);color:var(--teal)}
+.stab.active-service{background:var(--blue-bg);border-color:var(--blue-dim);color:var(--blue)}
+.stab.active-waitlist{background:var(--pink-bg);border-color:var(--pink-dim);color:var(--pink)}
+.stab.active-closing,.stab.active-cierre{background:var(--amber-bg);border-color:var(--amber-dim);color:var(--amber)}
+.stab.active-summary,.stab.active-resumen{background:var(--surface2);border-color:var(--border2);color:var(--text)}
+
+/* ── PROGRESS ── */
+.progress-wrap{padding:10px 16px;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.progress-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.progress-count{font-size:11px;font-family:var(--mono);color:var(--text3)}
+.pbar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+.fill-preshift,.fill-apertura{background:var(--amber-dim)}
+.fill-station,.fill-servicio{background:var(--teal-dim)}
+.fill-service{background:var(--blue-dim)}
+.fill-closing,.fill-cierre{background:var(--amber-dim)}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;padding:12px 16px 80px}
+.main::-webkit-scrollbar{display:none}
+
+/* ── BLOCKS ── */
+.block-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.block-head{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;user-select:none}
+.block-time{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;letter-spacing:.03em;flex-shrink:0}
+.bt-preshift,.bt-apertura{background:var(--amber-bg);color:var(--amber)}
+.bt-station,.bt-servicio{background:var(--teal-bg);color:var(--teal)}
+.bt-service{background:var(--blue-bg);color:var(--blue)}
+.bt-closing,.bt-cierre,.bt-critico{background:var(--red-bg);color:var(--red)}
+.bt-apertura-tag{background:var(--teal-bg);color:var(--teal)}
+.block-title{flex:1;font-size:13px;font-weight:500;color:var(--text)}
+.block-badge{font-size:11px;font-family:var(--mono);color:var(--text3);flex-shrink:0}
+.chevron-icon{font-size:16px;color:var(--text3);transition:transform .2s;flex-shrink:0}
+.block-body{border-top:0.5px solid var(--border)}
+
+/* ── CHECK ITEMS ── */
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:11px 16px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .15s;user-select:none}
+.check-item:last-child{border-bottom:none}
+.check-item.done{background:var(--surface2)}
+.check-item.done .ci-text{color:var(--text3);text-decoration:line-through}
+.ci-box{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.ci-box.checked{background:var(--teal);border-color:var(--teal)}
+.ci-box.checked-amber{background:var(--amber);border-color:var(--amber)}
+.ci-check{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s}
+.ci-box.checked .ci-check,.ci-box.checked-amber .ci-check{opacity:1}
+.ci-text{font-size:13px;color:var(--text);line-height:1.4;flex:1}
+.step-num{font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;flex-shrink:0;margin-top:2px;font-family:var(--mono)}
+.sn-amber{background:var(--amber-bg);color:var(--amber)}
+.sn-blue{background:var(--blue-bg);color:var(--blue)}
+.sn-teal{background:var(--teal-bg);color:var(--teal)}
+.sn-green{background:var(--green-bg);color:var(--green)}
+.sn-pink{background:var(--pink-bg);color:var(--pink)}
+.sn-purple{background:var(--purple-bg);color:var(--purple)}
+
+/* ── ZONE TAGS ── */
+.zt{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;flex-shrink:0;letter-spacing:.03em;margin-top:3px}
+.zt-bar{background:#fff0e0;color:#c47d0a}
+.zt-kitchen{background:#e0f5ee;color:#0a8a62}
+.zt-salon{background:#e6f0fb;color:#1a6abf}
+.zt-host{background:#fde6f2;color:#b01f6a}
+.zt-all{background:var(--surface2);color:var(--text2)}
+.zt-personal{background:var(--purple-bg);color:var(--purple)}
+
+/* ── POLICY BANNERS ── */
+.policy-banner{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;line-height:1.5;margin:10px 16px 4px}
+.policy-red{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-dim)}
+.policy-green{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-dim)}
+.policy-amber{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-dim)}
+.policy-teal{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-dim)}
+.policy-blue{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-dim)}
+.policy-pink{background:var(--pink-bg);color:var(--pink);border:0.5px solid var(--pink-dim)}
+.policy-purple{background:var(--purple-bg);color:var(--purple);border:0.5px solid var(--purple-dim)}
+.lastcall-banner{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-dim);margin:10px 16px 4px}
+.warn-banner{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-dim);margin-bottom:8px}
+.lc-banner{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-dim);margin-bottom:8px}
+
+/* ── SPEECH BOX ── */
+.speech-box{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin:8px 16px}
+.speech-label{font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--text3);margin-bottom:6px;text-transform:uppercase}
+.speech-text{font-size:13px;color:var(--text);font-style:italic;line-height:1.5;margin-bottom:6px}
+.speech-note{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* ── SUMMARY ── */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.res-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+.res-card.res-total{grid-column:1/-1}
+.res-val{font-size:28px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.res-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.pend-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.pend-item{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px}
+.pend-time{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--amber-bg);color:var(--amber);flex-shrink:0;margin-top:1px}
+
+/* ── BOTTOM BAR ── */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;display:flex;gap:8px;padding:10px 16px;background:var(--surface);border-top:0.5px solid var(--border)}
+.btn-action{flex:1;padding:11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);min-height:44px}
+
+/* ── DAY PILLS (Manager) ── */
+.day-pills{display:flex;gap:6px;flex-shrink:0}
+.day-pill{padding:5px 11px;border-radius:20px;border:0.5px solid var(--border2);font-size:11px;font-weight:500;color:var(--text2);background:transparent;cursor:pointer;font-family:var(--font);transition:all .2s}
+.day-pill.active{background:var(--amber);border-color:var(--amber);color:#fff}
+.svc-days{display:flex;gap:6px;margin:10px 16px 4px}
+.svc-day-btn{padding:7px 14px;border-radius:8px;border:0.5px solid var(--border2);font-size:12px;font-weight:500;color:var(--text2);background:var(--surface);cursor:pointer;font-family:var(--font);transition:all .2s}
+.svc-day-btn.active{background:var(--blue-bg);border-color:var(--blue-dim);color:var(--blue)}
+
+/* ── WAITLIST ── */
+.waitlist-table{width:100%;border-collapse:collapse;font-size:12px}
+.waitlist-table th{background:var(--surface2);padding:8px 10px;text-align:left;font-weight:600;font-size:10px;color:var(--text2);border-bottom:0.5px solid var(--border)}
+.waitlist-table td{padding:10px;border-bottom:0.5px solid var(--border);color:var(--text)}
+.waitlist-table td.num{font-family:var(--mono);color:var(--text3);text-align:center}
+
+/* ── LOGIN ── */
+.login-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.login-box{width:100%;max-width:340px}
+.login-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.login-card{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.login-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}
+.login-input{width:100%;padding:13px 14px;border:0.5px solid var(--border2);border-radius:10px;font-family:var(--font);font-size:16px;color:var(--text);background:var(--surface2);outline:none;-webkit-appearance:none}
+.login-btn{width:100%;padding:14px;border-radius:10px;border:none;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;background:var(--border2);color:var(--text3);opacity:.6}
+.login-error{display:none;font-size:12px;color:var(--red);padding:8px 12px;background:var(--red-bg);border-radius:8px;text-align:center}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.block-card{animation:fadeUp .2s ease both}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div style="text-align:center;margin-bottom:28px">
+      <div class="login-icon" id="login-icon" style="background:var(--amber-bg)">🍺</div>
+      <div style="font-size:20px;font-weight:600;color:var(--text)" id="login-role-title">Bruder Oviedo</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">1280 Oviedo Mall · Oviedo FL</div>
+    </div>
+    <div class="login-card">
+      <div>
+        <label class="login-label" id="lbl-name">What's your name?</label>
+        <input class="login-input" id="login-name" type="text" autocomplete="name"
+          oninput="loginCheck()" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="login-error" id="login-error"></div>
+      <button class="login-btn" id="login-btn" onclick="doLogin()" disabled id="login-btn">
+        <span id="lbl-start">Start shift →</span>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--text3)" id="lbl-saved">Info saved on this device only</div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-dot">🍺</div>
+    <div>
+      <div class="brand-name">Bruder Oviedo</div>
+      <div class="brand-sub" id="brand-sub">Staff Portal</div>
+    </div>
+  </div>
+  <div class="topbar-right" id="topbar-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+    </div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+</div>
+
+<!-- ROLE SELECTOR -->
+<div class="role-screen" id="role-screen">
+  <div class="role-hero">
+    <div class="role-hero-title" id="hero-title">Select your role</div>
+    <div class="role-hero-sub" id="hero-sub">Tap to start your checklist</div>
+    <div class="role-datetime">
+      <div class="dt-dot"></div>
+      <span id="dt-text">—</span>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-top:8px" id="greeting"></div>
+  </div>
+  <div class="role-cards">
+    <div class="role-card manager" onclick="selectRole('manager')">
+      <div class="rc-icon manager">👔</div>
+      <div class="rc-info">
+        <div class="rc-name" id="rc-manager">Manager</div>
+        <div class="rc-desc" id="rcd-manager">Opening · Service · Closing · Summary</div>
+      </div>
+      <div class="rc-arrow">→</div>
+    </div>
+    <div class="role-card server" onclick="selectRole('server')">
+      <div class="rc-icon server">🍺</div>
+      <div class="rc-info">
+        <div class="rc-name" id="rc-server">Server</div>
+        <div class="rc-desc" id="rcd-server">Shift checklist · Service flow</div>
+      </div>
+      <div class="rc-arrow">→</div>
+    </div>
+    <div class="role-card host" onclick="selectRole('host')">
+      <div class="rc-icon host">🎯</div>
+      <div class="rc-info">
+        <div class="rc-name" id="rc-host">Host</div>
+        <div class="rc-desc" id="rcd-host">Waitlist · Table assignment</div>
+      </div>
+      <div class="rc-arrow">→</div>
+    </div>
+    <div class="role-card runner" onclick="selectRole('runner')">
+      <div class="rc-icon runner">🏃</div>
+      <div class="rc-info">
+        <div class="rc-name" id="rc-runner">Runner</div>
+        <div class="rc-desc" id="rcd-runner">Food delivery · Table bussing</div>
+      </div>
+      <div class="rc-arrow">→</div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST SCREEN -->
+<div class="checklist-screen" id="checklist-screen" style="display:none">
+  <div class="cl-header">
+    <div class="btn-back" onclick="goBack()">←</div>
+    <div class="cl-role-badge" id="cl-badge">👔 Manager</div>
+    <div class="cl-user" id="cl-user"></div>
+    <!-- Day pills for manager -->
+    <div class="day-pills" id="day-pills" style="display:none">
+      <button class="day-pill active" onclick="setDay('semana',this)" id="dp-week">Tue–Thu · 3pm</button>
+      <button class="day-pill" onclick="setDay('finde',this)" id="dp-wknd">Fri–Sun · 11am</button>
+    </div>
+  </div>
+  <div class="section-tabs" id="section-tabs"></div>
+  <div class="progress-wrap" id="prog-wrap">
+    <div class="progress-meta">
+      <span class="progress-label" id="prog-label">Pre-Shift</span>
+      <span class="progress-count" id="prog-count">0 / 0</span>
+    </div>
+    <div class="pbar"><div class="pbar-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="main" id="main-content"></div>
+  <div class="bottom-bar">
+    <button class="btn-action" onclick="resetRole()" id="btn-reset">↺ New day</button>
+    <button class="btn-action" onclick="window.print()" id="btn-print">⎙ Print</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ══════════════════════════════════════════
+// LANGUAGE
+// ══════════════════════════════════════════
+let lang = 'en';
+let currentRole = null;
+let currentUser = '';
+let checks = {};
+let curSection = 'preshift';
+let dayMode = 'semana';
+let svcDay = 'semana';
+
+const UI = {
+  en: {
+    heroTitle: 'Select your role', heroSub: 'Tap to start your checklist',
+    greeting_morning: '☀️ Good morning, team', greeting_afternoon: '🌤 Good afternoon, team', greeting_evening: '🌙 Good evening, team',
+    rcManager: 'Manager', rcdManager: 'Opening · Service · Closing',
+    rcServer: 'Server', rcdServer: 'Shift checklist · Service flow',
+    rcHost: 'Host', rcdHost: 'Waitlist · Table assignment',
+    rcRunner: 'Runner', rcdRunner: 'Food delivery · Table bussing',
+    lblName: "What's your name?", lblStart: 'Start shift →', lblSaved: 'Info saved on this device only',
+    btnReset: '↺ New day', btnPrint: '⎙ Print',
+    tasks: ' tasks', pending: 'Pending', allDone: '✓ All tasks completed',
+    dpWeek: 'Tue–Thu · 3pm', dpWknd: 'Fri–Sun · 11am',
+  },
+  es: {
+    heroTitle: 'Selecciona tu rol', heroSub: 'Toca para iniciar tu planilla',
+    greeting_morning: '☀️ Buenos días, equipo', greeting_afternoon: '🌤 Buenas tardes, equipo', greeting_evening: '🌙 Buenas noches, equipo',
+    rcManager: 'Manager', rcdManager: 'Apertura · Servicio · Cierre',
+    rcServer: 'Mesero', rcdServer: 'Planilla de turno · Flujo de servicio',
+    rcHost: 'Host', rcdHost: 'Lista de espera · Mesas',
+    rcRunner: 'Runner', rcdRunner: 'Entrega de platos · Descomida',
+    lblName: '¿Cómo te llamas?', lblStart: 'Comenzar turno →', lblSaved: 'Info guardada solo en este dispositivo',
+    btnReset: '↺ Nuevo día', btnPrint: '⎙ Imprimir',
+    tasks: ' tareas', pending: 'Pendientes', allDone: '✓ Todas las tareas completadas',
+    dpWeek: 'Mar–Jue · 3pm', dpWknd: 'Vie–Dom · 11am',
+  }
+};
+function u(k){ return UI[lang][k] || UI.en[k] || k; }
+
+// ══════════════════════════════════════════
+// MANAGER DATA
+// ══════════════════════════════════════════
+const MANAGER_SECTIONS_EN = ['opening','service','closing','summary'];
+const MANAGER_SECTIONS_ES = ['apertura','servicio','cierre','resumen'];
+
+const MANAGER_T = {
+  en: { opening:'Opening', service:'Service', closing:'Closing', summary:'Summary',
+        tasks:' tasks', pending:'Pending', allDone:'✓ All tasks completed',
+        lc_semana:'Tue–Thu · Food last call: 9:15pm · Pizza last call: 9:45pm · Close: 10:00pm · Staff out: 11:00pm',
+        lc_viesab:'Fri–Sat · Food last call: 9:45pm · Pizza last call: 10:45pm · Close: 11:00pm · Staff out: 12:00am',
+        lc_dom:'Sun · Food last call: 7:45pm · Pizza last call: 7:45pm · Close: 8:00pm · Staff out: 11:00pm',
+        warn_week:'Tue–Wed: no host or runner — manager coordinates seating, menus and cutlery. Thu: full staff.',
+        warn_wknd:'Fri–Sun: full staff — host and runner in position. Opening 12:00pm.',
+        svc_week:'Tue–Thu', svc_fs:'Fri–Sat', svc_sun:'Sun',
+        zbar:'Bar', zkitchen:'Kitchen', zsalon:'Dining', zhost:'Host', zall:'General', zpersonal:'Personal',
+  },
+  es: { opening:'Apertura', service:'Servicio', closing:'Cierre', summary:'Resumen',
+        tasks:' tareas', pending:'Pendientes', allDone:'✓ Todas las tareas completadas',
+        lc_semana:'Mar–Jue · Last call comida: 9:15pm · Last call pizza: 9:45pm · Cierre: 10:00pm · Salida: 11:00pm',
+        lc_viesab:'Vie–Sáb · Last call comida: 9:45pm · Last call pizza: 10:45pm · Cierre: 11:00pm · Salida: 12:00am',
+        lc_dom:'Dom · Last call comida: 7:45pm · Last call pizza: 7:45pm · Cierre: 8:00pm · Salida: 11:00pm',
+        warn_week:'Mar–Mié: sin host ni runner — operador coordina entradas, cartas y cubiertos. Jue: dotación completa.',
+        warn_wknd:'Vie–Dom: dotación completa — host y runner en posición. Apertura 12:00pm.',
+        svc_week:'Mar–Jue', svc_fs:'Vie–Sáb', svc_sun:'Dom',
+        zbar:'Barra', zkitchen:'Cocina', zsalon:'Salón', zhost:'Host', zall:'General', zpersonal:'Personal',
+  }
+};
+function mt(k){ return MANAGER_T[lang][k] || MANAGER_T.en[k] || k; }
+
+const MANAGER_DATA = {
+  AP_SEMANA:[
+    {time:'3:00 pm', title:{en:'Arrival — manager check-in',es:'Llegada — verificación del operador'}, badge:'bt-apertura', items:[
+      {z:'personal',en:'Wash hands upon entering the restaurant',es:'Lavarse las manos al ingresar al restaurante'},
+      {z:'personal',en:'Put on full uniform before any task',es:'Ponerse el uniforme completo antes de cualquier tarea'},
+      {z:'personal',en:'Check you have a pen — required all shift',es:'Verificar que lleva esfero — obligatorio todo el turno'},
+      {z:'personal',en:'Clock in once uniformed and ready',es:'Hacer clock-in en el sistema una vez uniformado'},
+    ]},
+    {time:'3:05 pm', title:{en:'Receive the team — arrival protocol',es:'Recibir al equipo — protocolo de llegada'}, badge:'bt-apertura', items:[
+      {z:'personal',en:'Every employee washes hands upon arrival',es:'Cada empleado se lava las manos al llegar'},
+      {z:'personal',en:'Every employee in full uniform: shirt, apron, footwear',es:'Cada empleado se pone uniforme completo: camisa, delantal, calzado'},
+      {z:'personal',en:'Check every employee has a pen',es:'Verificar que cada empleado tenga su esfero'},
+      {z:'personal',en:'Clock in only after uniformed and ready for service',es:'Clock-in solo después de estar uniformado y listo para servicio'},
+    ]},
+    {time:'3:10 pm', title:{en:'Bathrooms & common areas',es:'Baños y áreas comunes'}, badge:'bt-apertura', items:[
+      {z:'all',en:'Bathrooms: mirrors shined, toilets clean, paper & soap stocked',es:'Baños: espejos brillados, inodoros limpios, papel y jabón disponibles'},
+      {z:'all',en:'Bathroom trash cans: washed from previous day, bag inserted',es:'Canecas de baños: lavadas del día anterior, con bolsa puesta'},
+      {z:'all',en:'Server station trash cans: washed and bagged',es:'Canecas de estaciones de meseros: lavadas y con bolsa'},
+      {z:'salon',en:'Dining floor: swept and mopped, no stains',es:'Piso del salón: barrido y trapeado, sin manchas'},
+      {z:'salon',en:'Tables and chairs: aligned and clean',es:'Mesas y sillas: alineadas y limpias'},
+    ]},
+    {time:'3:20 pm', title:{en:'Lights, music & TVs',es:'Luces, música y televisores'}, badge:'bt-apertura', items:[
+      {z:'all',en:'Turn on lights: dining, bar and Brewery Zone (LZ)',es:'Prender luces: salón, barra y Brewery Zone (LZ)'},
+      {z:'all',en:'Music: soft tone, low volume — conversational level',es:'Música: tono suave, volumen bajo — nivel conversacional'},
+      {z:'all',en:'Turn on all TVs — verify DirecTV signal',es:'Prender todos los televisores — verificar señal DirecTV'},
+      {z:'all',en:'Set channels to sports',es:'Canales en deportes'},
+    ]},
+    {time:'3:25 pm', title:{en:'Bar — inspection & setup',es:'Barra — revisión y montaje'}, badge:'bt-critico', items:[
+      {z:'bar',en:'Bar clean and organized',es:'Barra limpia y organizada'},
+      {z:'bar',en:'Water station set up: water, ice, disposable and glass cups',es:'Estación de agua montada: agua, hielo, vasos desechables y vasos de vidrio'},
+      {z:'bar',en:'CRITICAL — enough ice at stations: no ice = warm soda',es:'CRÍTICO — suficiente hielo en estaciones: sin hielo = gaseosa caliente'},
+      {z:'bar',en:'Soda machine: has CO2, soda comes out cold correctly',es:'Máquina de gaseosa: tiene CO2, gaseosa sale fría correctamente'},
+      {z:'bar',en:'All printers have enough paper roll',es:'Todas las impresoras con rollo de papel suficiente'},
+    ]},
+    {time:'3:35 pm', title:{en:'86 list — kitchen & bar availability',es:'86 list — disponibilidad cocina y barra'}, badge:'bt-critico', items:[
+      {z:'bar',en:'Ask bartender availability of ALL products — note the 86 list',es:'Preguntar al bartender disponibilidad de TODOS los productos — anotar los 86'},
+      {z:'kitchen',en:'Go to kitchen: verify with Chef what is and is NOT available today',es:'Ir a cocina: verificar con el Chef qué hay y qué NO hay hoy'},
+      {z:'kitchen',en:'2 food warming lamps: turned on',es:'2 lámparas de mantener comida caliente: prendidas'},
+      {z:'kitchen',en:'5 kitchen screens: on and working',es:'5 pantallas de cocina: prendidas y funcionando'},
+    ]},
+    {time:'3:45 pm', title:{en:'Dining — station setup',es:'Salón — montaje de estaciones'}, badge:'bt-apertura', items:[
+      {z:'salon',en:'Every table with salt and pepper — shakers clean',es:'Cada mesa con sal y pimienta — saleros limpios'},
+      {z:'salon',en:'Porcelain cups on all tables',es:'Vasos de porcelana en todas las mesas'},
+      {z:'salon',en:'Server stations: broom, dustpan, table splash',es:'Estaciones de meseros: escoba, recogedor, splash para mesas'},
+      {z:'host',en:'Host station: cutlery wrapped in napkins, sufficient quantity',es:'Estación de host: cubiertos envueltos en servilletas, cantidad suficiente'},
+      {z:'host',en:'Clean menus in good condition available',es:'Cartas limpias y en buen estado'},
+      {z:'host',en:'Review reservations — plan table map placement',es:'Revisar reservas del día — planear ubicación en el mapa de mesas'},
+    ]},
+    {time:'3:50 pm', title:{en:'Team briefing',es:'Briefing del equipo'}, badge:'bt-apertura', items:[
+      {z:'all',en:'Gather ALL staff — check uniform, pen and clock-in for each',es:'Reunir a TODO el equipo — verificar uniforme, esfero y clock-in de cada uno'},
+      {z:'all',en:'Share the 86 list: what is unavailable in kitchen and bar',es:'Comunicar el 86 del día: qué no hay en cocina y en barra'},
+      {z:'all',en:'Assign zones for the day: BZ / LZ / DR / B / P',es:'Asignar zonas del día: BZ / LZ / DR / B / P'},
+      {z:'all',en:'Confirm reservation placement for the day',es:'Confirmar ubicación de reservas del día'},
+      {z:'all',en:'Tue–Wed: no host or runner — each server covers their full zone',es:'Mar–Mié sin host ni runner: cada mesero cubre su zona completa'},
+      {z:'all',en:'Reminder: raise your hand when something happens — resolve fast',es:'Recordar: levantar la mano cuando algo suceda — resolver rápido'},
+    ]},
+  ],
+  AP_FINDE:[
+    {time:'11:00 am', title:{en:'Arrival — manager check-in',es:'Llegada — verificación del operador'}, badge:'bt-apertura', items:[
+      {z:'personal',en:'Wash hands upon entering the restaurant',es:'Lavarse las manos al ingresar al restaurante'},
+      {z:'personal',en:'Put on full uniform before any task',es:'Ponerse el uniforme completo antes de cualquier tarea'},
+      {z:'personal',en:'Check you have a pen — required all shift',es:'Verificar que lleva esfero — obligatorio todo el turno'},
+      {z:'personal',en:'Clock in once uniformed and ready',es:'Hacer clock-in en el sistema una vez uniformado'},
+    ]},
+    {time:'11:05 am', title:{en:'Receive the team — arrival protocol',es:'Recibir al equipo — protocolo de llegada'}, badge:'bt-apertura', items:[
+      {z:'personal',en:'Every employee washes hands upon arrival',es:'Cada empleado se lava las manos al llegar'},
+      {z:'personal',en:'Every employee in full uniform: shirt, apron, footwear',es:'Cada empleado se pone uniforme completo: camisa, delantal, calzado'},
+      {z:'personal',en:'Clock in only after uniformed and ready for service',es:'Clock-in solo después de estar uniformado y listo para servicio'},
+    ]},
+    {time:'11:20 am', title:{en:'Bar — inspection & setup',es:'Barra — revisión y montaje'}, badge:'bt-critico', items:[
+      {z:'bar',en:'Bar clean and organized',es:'Barra limpia y organizada'},
+      {z:'bar',en:'CRITICAL — enough ice at stations: no ice = warm soda',es:'CRÍTICO — suficiente hielo en estaciones: sin hielo = gaseosa caliente'},
+      {z:'bar',en:'All printers have enough paper roll',es:'Todas las impresoras con rollo de papel suficiente'},
+    ]},
+    {time:'11:35 am', title:{en:'86 list — kitchen & bar availability',es:'86 list — disponibilidad cocina y barra'}, badge:'bt-critico', items:[
+      {z:'bar',en:'Ask bartender availability of ALL products — note the 86 list',es:'Preguntar al bartender disponibilidad de TODOS los productos — anotar los 86'},
+      {z:'kitchen',en:'Go to kitchen: verify with Chef what is and is NOT available today',es:'Ir a cocina: verificar con el Chef qué hay y qué NO hay hoy'},
+      {z:'kitchen',en:'2 food warming lamps: turned on',es:'2 lámparas de mantener comida caliente: prendidas'},
+      {z:'kitchen',en:'5 kitchen screens: on and working',es:'5 pantallas de cocina: prendidas y funcionando'},
+    ]},
+    {time:'11:45 am', title:{en:'Dining — station setup',es:'Salón — montaje de estaciones'}, badge:'bt-apertura', items:[
+      {z:'salon',en:'Every table with salt and pepper — shakers clean',es:'Cada mesa con sal y pimienta — saleros limpios'},
+      {z:'host',en:'Host station: cutlery wrapped in napkins, sufficient quantity',es:'Estación de host: cubiertos envueltos en servilletas, cantidad suficiente'},
+      {z:'host',en:'Review reservations — plan table map placement',es:'Revisar reservas del día — planear ubicación en el mapa de mesas'},
+    ]},
+    {time:'11:50 am', title:{en:'Team briefing',es:'Briefing del equipo'}, badge:'bt-apertura', items:[
+      {z:'all',en:'Gather ALL staff — check uniform, pen and clock-in for each',es:'Reunir a TODO el equipo — verificar uniforme, esfero y clock-in de cada uno'},
+      {z:'all',en:'Share the 86 list',es:'Comunicar el 86 del día'},
+      {z:'all',en:'Assign zones: BZ / LZ / DR / B / P',es:'Asignar zonas del día: BZ / LZ / DR / B / P'},
+      {z:'all',en:'Fri–Sun: full staff — host and runner in position',es:'Vie–Dom: dotación completa — host y runner en posición'},
+    ]},
+  ],
+  SERVICIO:[
+    {time:'Opening', title:{en:'Open to guests',es:'Abrir al público'}, badge:'bt-servicio', items:[
+      {z:'host',en:'Host in position — menus ready, wrapped cutlery available',es:'Host en posición — cartas listas, cubiertos envueltos disponibles'},
+      {z:'all',en:'Team in assigned zones',es:'Equipo en sus zonas asignadas'},
+      {z:'all',en:'Music at conversational level',es:'Música en nivel conversacional'},
+    ]},
+    {time:'Ongoing', title:{en:'Zone control — full service',es:'Control de zonas — todo el servicio'}, badge:'bt-servicio', items:[
+      {z:'salon',en:'Walk zones BZ, LZ, DR and P every 20–30 min: tables clean',es:'Recorrer zonas BZ, LZ, DR y P cada 20–30 min: mesas limpias'},
+      {z:'bar',en:'Restock ice water at bar stations',es:'Abastecimiento de agua con hielo en estaciones de barra'},
+      {z:'host',en:'Menus always return to host — must never run out',es:'Menús regresan siempre al host — no puede quedarse sin cartas'},
+      {z:'kitchen',en:'Kitchen communication: items running low → live 86 to team',es:'Comunicación con cocina: productos agotándose → 86 en vivo al equipo'},
+    ]},
+    {time:'Ongoing', title:{en:'Timing & quality',es:'Tiempos y calidad'}, badge:'bt-servicio', items:[
+      {z:'bar',en:'Monitor drink timing — drinks must go out before food',es:'Controlar tiempo de bebidas — bebidas deben salir antes que la comida'},
+      {z:'kitchen',en:'Monitor timing of starters and entrees',es:'Controlar tiempo de entradas y platos fuertes'},
+      {z:'salon',en:'Visit tables: ask for food and beer feedback',es:'Pasar por las mesas: pedir feedback de comida y cerveza'},
+      {z:'all',en:'Complaint or incident: resolve immediately',es:'Queja o incidente: resolver inmediatamente'},
+    ]},
+    {time:'5:00 pm', title:{en:'Transition to bar mode',es:'Transición a modo bar'}, badge:'bt-servicio', items:[
+      {z:'all',en:'Raise music volume — from lunch to bar/night mode',es:'Subir volumen de música — de almuerzo a modo bar / noche'},
+      {z:'all',en:'Verify full team is present for evening shift',es:'Verificar que el equipo completo esté para el turno de tarde'},
+    ]},
+    {time:'Kitchen last call', title:{en:'Kitchen last call',es:'Último llamado de cocina'}, badge:'bt-critico', items:[
+      {z:'kitchen',en:'Announce kitchen last call — see exact time in banner above',es:'Anunciar último llamado de cocina — ver hora exacta en banner arriba'},
+      {z:'kitchen',en:'Close low-stock items in POS — prevent orders',es:'Cerrar en el POS platos con pocas cantidades — impedir venta'},
+      {z:'all',en:'Communicate to team which items are no longer available',es:'Comunicar al equipo qué platos ya no están disponibles'},
+    ]},
+    {time:'Bar last call', title:{en:'Bar last call',es:'Último llamado de barra'}, badge:'bt-critico', items:[
+      {z:'bar',en:'Announce bar last call — see exact time in banner above',es:'Anunciar último llamado de barra — ver hora exacta en banner arriba'},
+      {z:'bar',en:'Servers: stop taking drink orders',es:'Meseros: no tomar más órdenes de bebidas'},
+      {z:'all',en:'Team: begin closing procedures',es:'Equipo: iniciar proceso de cierre'},
+    ]},
+  ],
+  CIERRE:[
+    {time:'At close', title:{en:'Zone closing — servers',es:'Cierre de zonas — meseros'}, badge:'bt-critico', items:[
+      {z:'salon',en:'Each server cleans their zone: swept and mopped',es:'Cada mesero limpia su zona: barrida y trapeada'},
+      {z:'salon',en:'Clean all used menus',es:'Limpiar todas las cartas y menús usados'},
+      {z:'salon',en:'Service rags: washed and laid out to dry',es:'Trapos de servicio: lavados y extendidos para secar'},
+      {z:'salon',en:'Wash trash cans at each station and leave to drain',es:'Lavar canecas de cada estación y dejarlas escurriendo'},
+      {z:'all',en:'Take out bathroom trash',es:'Sacar basura de baños'},
+      {z:'all',en:'Clean check presenters with alcohol',es:'Limpiar pasacuentas con alcohol'},
+      {z:'all',en:'Each server returns apron to manager',es:'Cada mesero entrega delantal al operador'},
+    ]},
+    {time:'At close', title:{en:'Cutlery & restocking',es:'Cubiertos y reabastecimiento'}, badge:'bt-critico', items:[
+      {z:'salon',en:'Polish cutlery and leave ready for tomorrow',es:'Brillar cubiertos y dejarlos listos para mañana'},
+      {z:'host',en:'Load napkins at stations for tomorrow',es:'Cargar servilletas en estaciones para mañana'},
+      {z:'host',en:'Leave takeout boxes, sauce cups and to-go bags stocked',es:'Dejar cajas desechables, copas para salseras y bolsas para llevar'},
+      {z:'host',en:'Host station and all stations: organized and clean',es:'Estación de host y estaciones: muy organizadas y limpias'},
+    ]},
+    {time:'At close', title:{en:'Screens, music & lights',es:'Pantallas, música y luces'}, badge:'bt-critico', items:[
+      {z:'all',en:'Turn off all TVs',es:'Apagar todos los televisores'},
+      {z:'all',en:'Turn off music',es:'Apagar música'},
+      {z:'all',en:'Turn off lights: dining → bar → brewery → exterior',es:'Apagar luces: salón → barra → cervecería → exteriores'},
+    ]},
+    {time:'Final check', title:{en:'Manager closing verification',es:'Verificación de cierre del operador'}, badge:'bt-critico', items:[
+      {z:'all',en:'Walk all zones: BZ, LZ, DR, B, P — everything clean and organized',es:'Recorrer todas las zonas: BZ, LZ, DR, B, P — todo limpio y organizado'},
+      {z:'kitchen',en:'Confirm with Chef: kitchen closed and clean',es:'Confirmar con el Chef: cocina cerrada y limpia'},
+      {z:'bar',en:'Confirm with bartender: bar closed and clean',es:'Confirmar con bartender: barra cerrada y limpia'},
+      {z:'all',en:'No guests remaining in the establishment',es:'No quedan clientes en el establecimiento'},
+      {z:'all',en:"Log the day's updates in the shift log",es:'Registrar novedades del día en la bitácora'},
+      {z:'all',en:'Shift handoff: 86 list, updates and 3 improvement points for tomorrow',es:'Entrega de turno: 86 del día, novedades y 3 puntos de mejora para mañana'},
+      {z:'personal',en:'Verify all staff clocked out before leaving',es:'Verificar clock-out de todo el equipo antes de salir'},
+    ]},
+  ],
+};
+
+// ══════════════════════════════════════════
+// SERVER DATA
+// ══════════════════════════════════════════
+const SERVER_T = {
+  en:{ preshift:'Pre-Shift', station:'Station', service:'Service', closing:'Closing', summary:'Summary', tasks:' tasks', pending:"Today's pending", allDone:'✓ All tasks completed',
+    policy_water:'⚠  BRUDER POLICY: Do NOT bring water automatically. Always offer drinks from the menu. Water only if the guest requests it.',
+    policy_sales:'💰  SALES MINDSET: Every table visit is an opportunity — drinks, rounds, desserts. Always push the sale with a smile.',
+    speech_label:'BRUDER WELCOME SPEECH',
+    speech_main:'"Welcome to Bruder! My name is ___________. We make our beers using German techniques and add exotic, tropical ingredients. Would you like to try a beer to start?"',
+    speech_note:'If they ask what beers we have: "We have Maracuyá, Chocolate, Pineapple, Barley Wine, IPA, Stout... We also have a delicious cocktail menu and non-alcoholic options."',
+    lastcall:'⏰  Watch for LAST CALL: Food · Pizza · Bar — see exact times on manager\'s board',
+  },
+  es:{ preshift:'Pre-Turno', station:'Estación', service:'Servicio', closing:'Cierre', summary:'Resumen', tasks:' tareas', pending:'Pendientes de hoy', allDone:'✓ Todas las tareas completadas',
+    policy_water:'⚠  POLÍTICA BRUDER: NO se lleva agua automáticamente. Siempre ofrecer bebidas de la carta.',
+    policy_sales:'💰  MENTALIDAD DE VENTA: Cada visita a la mesa es una oportunidad — bebidas, rondas, postres.',
+    speech_label:'SPEECH DE BIENVENIDA BRUDER',
+    speech_main:'"¡Bienvenidos a Bruder! Me llamo ___________. Hacemos nuestras cervezas con técnicas alemanas y adicionamos ingredientes exóticos y tropicales. ¿Quieren probar alguna cerveza para empezar?"',
+    speech_note:'Si preguntan qué cervezas hay: "Tenemos Maracuyá, Chocolate, Piña, Barley Wine, IPA, Stout... También una carta de cócteles."',
+    lastcall:'⏰  Estar atento a los últimos llamados: Comida · Pizza · Barra',
+  }
+};
+function st(k){ return SERVER_T[lang][k] || SERVER_T.en[k] || k; }
+
+const SERVER_DATA = {
+  preshift:[{type:'preshift',title:{en:'Pre-Shift — Arrive 10 min early',es:'Pre-Turno — Llegar 10 min antes'},numbered:true,items:[
+    {n:'1',en:'Wash hands upon entering — BEFORE any task',es:'Lavarse las manos al ingresar — ANTES de cualquier tarea'},
+    {n:'2',en:'Put on apron',es:'Ponerse el delantal'},
+    {n:'3',en:'Clock in on Toast system',es:'Hacer clock-in en el sistema Toast'},
+    {n:'4',en:'Pen in pocket — required for the entire shift',es:'Tener esfero en el bolsillo — obligatorio todo el turno'},
+    {n:'5',en:'Attend manager briefing — zone assignment for the day',es:'Asistir al briefing del manager — distribución de zonas del día'},
+    {n:'6',en:"Know today's 86: what's not available in kitchen and bar",es:'Conocer el 86 del día: qué no hay en cocina y en barra'},
+    {n:'7',en:'Verify Toast device is working to take orders',es:'Verificar que el dispositivo Toast esté funcionando para tomar pedidos'},
+  ]}],
+  station:[{type:'station',title:{en:'Station Opening',es:'Apertura de Estación'},items:[
+    {en:'Liner in service bin + spare liner available',es:'Bolsa puesta en la caneca + bolsa de repuesto disponible'},
+    {en:'Paper roll in printer + spare roll at station',es:'Rollo de papel en la impresora + rollo de repuesto en la estación'},
+    {en:'Napkins stocked and spare napkins at station',es:'Servilletas cargadas y de repuesto en la estación'},
+    {en:'Salt & pepper on every table — clean and spare set at station',es:'Sal y pimienta en cada mesa — limpios y salero de repuesto en la estación'},
+    {en:'Clean service cloth for the shift',es:'Trapo de turno limpio'},
+    {en:'Table spray bottle filled',es:'Spray limpiador de mesas recargado'},
+    {en:'Porcelain glasses on all tables',es:'Vasos de porcelana en todas las mesas'},
+  ]}],
+  service:[{type:'service',title:{en:'Service Flow',es:'Flujo de Servicio'},speech:true,items:[
+    {n:'①',style:'blue',en:'Take drink order from the menu — do NOT bring water automatically',es:'Tomar orden de bebidas de la carta — NO llevar agua automáticamente'},
+    {n:'②',style:'blue',en:'Present food menu + communicate the 86 before they order',es:'Presentar la carta de comida + comunicar el 86 del día antes de que ordenen'},
+    {n:'③',style:'blue',en:'Take food order — repeat to confirm with the guest',es:'Tomar orden de comida — repetir para confirmar con el cliente'},
+    {n:'④',style:'blue',en:"Remove FOOD menus — ask: 'Shall I leave the drink menu?'",es:"Retirar las cartas de COMIDA — preguntar: '¿Les dejo la carta de bebidas?'"},
+    {n:'⑤',style:'blue',en:'Deliver drinks first, then starters, then entrees',es:'Entregar bebidas primero, luego entradas, luego platos fuertes'},
+    {n:'⑥',style:'blue',en:"Check back 2 min after serving: 'Everything good?'",es:"Volver 2 min después de servir: '¿Todo bien con su orden?'"},
+    {n:'⑦',style:'green',en:'💰 Offer second round when glass is less than 1/3 full',es:'💰 Ofrecer segunda ronda cuando quede menos de 1/3 en el vaso'},
+    {n:'⑧',style:'blue',en:'Clear empty plates and keep tables clean — without being asked',es:'Retirar platos vacíos y mantener mesas limpias — sin que el cliente lo pida'},
+    {n:'⑨',style:'green',en:"💰 Offer desserts when clearing entree plates",es:"💰 Ofrecer postres al retirar los platos fuertes"},
+    {n:'⑩',style:'blue',en:'Present check only when the guest asks or is getting ready to leave',es:'Presentar la cuenta solo cuando el cliente lo pida o se disponga a salir'},
+    {n:'⑪',style:'blue',en:"Farewell: 'Thank you! Hope to see you soon at Bruder'",es:"Despedir: '¡Gracias! Esperamos verlos pronto en Bruder'"},
+  ]}],
+  closing:[{type:'closing',title:{en:'Zone Closing',es:'Cierre de Zona'},lastcall:true,items:[
+    {en:'Clean all tables and chairs in my zone',es:'Limpiar todas las mesas y sillas de mi zona'},
+    {en:'Sweep and mop my zone',es:'Barrer y trapear mi zona'},
+    {en:'Wrap cutlery: knife + fork in napkin (for next service)',es:'Envolver cubiertos: cuchillo + tenedor en servilleta (para el siguiente servicio)'},
+    {en:'Restock napkins at station',es:'Recargar servilletas en la estación'},
+    {en:'Take out station trash',es:'Sacar la basura de la estación'},
+    {en:'Wash service cloth and spread to dry',es:'Lavar el trapo de servicio y dejarlo extendido para secar'},
+    {en:'Return apron to manager',es:'Entregar delantal al manager'},
+    {en:'Clock out on the system',es:'Hacer clock-out en el sistema'},
+  ]}],
+};
+const SERVER_SECTIONS = ['preshift','station','service','closing','summary'];
+
+// ══════════════════════════════════════════
+// HOST DATA
+// ══════════════════════════════════════════
+const HOST_T = {
+  en:{ preshift:'Pre-Shift', station:'Station', service:'Service', waitlist:'Waitlist', closing:'Closing', summary:'Summary', tasks:' tasks', pending:'Pending', allDone:'✓ All tasks completed',
+    golden:'😊  GOLDEN RULE: ALWAYS greet every guest with a big smile and say "Welcome to Bruder!" — you are the first impression of the restaurant.',
+    door:'📍  HOST IS ALWAYS AT THE DOOR. Weekend: 2 hosts — one walks a party, the other stays at the station. The station is NEVER left unattended.',
+    comm:'📢  Notify server when table is seated. In busy service: ask server if ready before seating next table.',
+    wait:'⏱  Give an estimated wait of 10 minutes — always be honest. Send a text when the table is ready.',
+    lc:'⏰  Watch for LAST CALLS — Food · Pizza · Bar — see exact times on manager\'s board',
+  },
+  es:{ preshift:'Pre-Turno', station:'Estación', service:'Servicio', waitlist:'Lista Espera', closing:'Cierre', summary:'Resumen', tasks:' tareas', pending:'Pendientes', allDone:'✓ Todas completadas',
+    golden:'😊  REGLA DE ORO: Recibir SIEMPRE a cada cliente con una gran sonrisa y decir "¡Bienvenidos a Bruder!"',
+    door:'📍  EL HOST SIEMPRE ESTÁ EN LA PUERTA. Fin de semana somos 2 hosts: mientras uno lleva una mesa, el otro permanece en la estación.',
+    comm:'📢  Avisar al mesero cuando su mesa esté lista. En servicio intenso: preguntar al mesero si está listo antes de sentar.',
+    wait:'⏱  Dar espera estimada de 10 minutos — siempre ser honestos. Enviar mensaje cuando la mesa esté lista.',
+    lc:'⏰  Estar atento a los ÚLTIMOS LLAMADOS — Comida · Pizza · Barra',
+  }
+};
+function ht(k){ return HOST_T[lang][k] || HOST_T.en[k] || k; }
+
+const HOST_DATA = {
+  preshift:[{type:'preshift',title:{en:'Pre-Shift — Arrive 10 min early',es:'Pre-Turno — Llegar 10 min antes'},numbered:true,items:[
+    {n:'1',en:'Wash hands upon entering — BEFORE any task',es:'Lavarse las manos al ingresar — ANTES de cualquier tarea'},
+    {n:'2',en:'Put on full uniform',es:'Ponerse el uniforme completo'},
+    {n:'3',en:'Clock in on Toast system',es:'Hacer clock-in en el sistema Toast'},
+    {n:'4',en:"Attend manager briefing — know each server's assigned zone",es:'Asistir al briefing del manager — conocer zonas asignadas a cada mesero'},
+    {n:'5',en:"Review today's reservations",es:'Revisar reservas del día'},
+    {n:'6',en:'Plan placement of each reservation on the table map',es:'Planear la ubicación de cada reserva en el mapa de mesas'},
+    {n:'7',en:'Have enough wrapped cutlery ready at the station',es:'Tener suficientes cubiertos envueltos listos en la estación'},
+    {n:'8',en:'Have clean menus in good condition available',es:'Tener cartas limpias y en buen estado disponibles'},
+    {n:'9',en:'Have phone available for waitlist messaging',es:'Tener celular disponible para enviar mensajes a lista de espera'},
+  ]}],
+  station:[{type:'station',title:{en:'Station Opening',es:'Apertura de Estación'},items:[
+    {en:'Wrapped cutlery — sufficient quantity for the shift',es:'Cubiertos envueltos — cantidad suficiente para el turno'},
+    {en:'Clean menus — no stains or tears',es:'Cartas limpias — sin manchas ni roturas'},
+    {en:'Table spray filled at station',es:'Splash lleno en la estación'},
+    {en:'Reservations reviewed and placed on table map',es:'Reservas revisadas y ubicadas en el mapa de mesas'},
+    {en:'Phone charged for waitlist',es:'Celular cargado para lista de espera'},
+    {en:'Soup and dessert spoons available at station',es:'Cucharas de sopa y postre disponibles en la estación'},
+  ]}],
+  service:[{type:'service',title:{en:'During Service — Always at the door',es:'Durante el Servicio — Siempre en la puerta'},items:[
+    {n:'①',style:'pink',en:'😊 Greet every guest: "Welcome to Bruder!" — always with a big smile',es:'😊 Recibir a cada cliente: "¡Bienvenidos a Bruder!" — siempre con una gran sonrisa'},
+    {n:'②',style:'pink',en:'Check if they have a reservation or are walk-ins',es:'Verificar si tienen reserva o si vienen sin reserva'},
+    {n:'③',style:'pink',en:'Assign table by server zone — one table at a time per server when possible',es:'Asignar mesa según zona del mesero'},
+    {n:'④',style:'pink',en:'Check with the server if they are ready before seating',es:'Revisar con el mesero si está listo para recibir la mesa antes de sentarlos'},
+    {n:'⑤',style:'pink',en:'Walk guests to their table with menus and cutlery',es:'Llevar a los clientes a la mesa con cartas y cubiertos'},
+    {n:'⑥',style:'pink',en:'"Your server will be right with you"',es:'"Mi compañero ya viene a atenderlos"'},
+    {n:'⑦',style:'pink',en:'📢 Notify the server: "Table X ready to be served"',es:'📢 Comunicar al mesero: "Mesa X lista para atender"'},
+    {n:'⑧',style:'pink',en:'Maintain wrapped cutlery stocked at station at all times',es:'Mantener cubiertos envueltos disponibles en la estación en todo momento'},
+    {n:'⑨',style:'pink',en:'Coordinate with runner when a table is free to clean it quickly',es:'Coordinar con el runner cuando una mesa esté libre para limpiarla rápido'},
+  ]}],
+  waitlist:[{type:'waitlist',title:{en:'Waitlist Management',es:'Manejo de Lista de Espera'},waitlist:true,items:[]}],
+  closing:[{type:'closing',title:{en:'Shift Closing',es:'Cierre de Turno'},items:[
+    {en:'Leave all cutlery wrapped and ready for next shift',es:'Dejar todos los cubiertos envueltos listos para el siguiente turno'},
+    {en:'Return clean and organized menus',es:'Entregar cartas limpias y organizadas'},
+    {en:'Fill table spray for next shift',es:'Llenar splash para el siguiente turno'},
+    {en:'Leave station organized and free of paper',es:'Dejar estación organizada y sin papeles'},
+    {en:'Clock out on the system',es:'Hacer clock-out en el sistema'},
+  ]}],
+};
+const HOST_SECTIONS = ['preshift','station','service','waitlist','closing','summary'];
+
+// ══════════════════════════════════════════
+// RUNNER DATA
+// ══════════════════════════════════════════
+const RUNNER_T = {
+  en:{ preshift:'Pre-Shift', station:'Station', service:'Service', closing:'Closing', summary:'Summary', tasks:' tasks', pending:'Pending', allDone:'✓ All tasks completed',
+    golden:'🔑  GOLDEN RULE: There must NEVER be dirty tables with plates or food. Your job guarantees available tables for the host at all times.',
+    comm:'📢  COMMUNICATION: When full order delivered → notify server. When table is clean → notify host. Always.',
+    team:"🤝  WE ARE 2 RUNNERS: Coordinate to cover all zones. If one is busy the other covers.",
+    lc:"⏰  Watch for LAST CALLS — Food · Pizza · Bar — see exact times on manager's board",
+  },
+  es:{ preshift:'Pre-Turno', station:'Estación', service:'Servicio', closing:'Cierre', summary:'Resumen', tasks:' tareas', pending:'Pendientes', allDone:'✓ Todas completadas',
+    golden:'🔑  REGLA DE ORO: Por ningún motivo puede haber mesas sucias con platos o comida. Tu trabajo garantiza mesas disponibles para el host en todo momento.',
+    comm:'📢  COMUNICACIÓN: Al entregar orden completa → avisar al mesero. Al limpiar mesa → avisar al host. Siempre.',
+    team:'🤝  SOMOS 2 RUNNERS: Coordinarse para cubrir todas las zonas.',
+    lc:'⏰  Estar atento a los ÚLTIMOS LLAMADOS — Comida · Pizza · Barra',
+  }
+};
+function rt(k){ return RUNNER_T[lang][k] || RUNNER_T.en[k] || k; }
+
+const RUNNER_DATA = {
+  preshift:[{type:'preshift',title:{en:'Pre-Shift — Arrive 10 min early',es:'Pre-Turno — Llegar 10 min antes'},numbered:true,items:[
+    {n:'1',en:'Wash hands upon entering — BEFORE any task',es:'Lavarse las manos al ingresar — ANTES de cualquier tarea'},
+    {n:'2',en:'Put on full uniform',es:'Ponerse el uniforme completo'},
+    {n:'3',en:'Clock in on Toast system',es:'Hacer clock-in en el sistema Toast'},
+    {n:'4',en:"Attend manager briefing — know each server's zone and name",es:'Asistir al briefing del manager — conocer zonas y nombres de cada mesero'},
+    {n:'5',en:'Set up work cart: bottom basket ready for bussing',es:'Preparar carro de trabajo: canastilla abajo lista para descomida'},
+    {n:'6',en:'Have table spray ready for cleaning during service',es:'Tener splash listo para limpieza de mesas durante el servicio'},
+    {n:'7',en:'Place trays at each end of the bar — for carrying drinks to the dining room',es:'Dejar bandejas en cada extremo de la barra — para llevar bebidas al salón'},
+    {n:'8',en:'Verify heat lamp at food station is turned on',es:'Verificar que la lámpara de calor de la estación esté prendida'},
+  ]}],
+  station:[{type:'station',title:{en:'Station Opening',es:'Apertura de Estaciones'},items:[
+    {en:'Fill water stations at both bar ends: water, ice, disposable cups and glass cups each side',es:'Llenar estaciones en ambos extremos de la barra: agua, hielo, vasos desechables y vasos de vidrio en cada lado'},
+    {en:'Load ice in soda machine / soda station',es:'Cargar hielo en la máquina / estación de gaseosa'},
+    {en:'Restock napkins at all stations',es:'Recargar servilletas en todas las estaciones'},
+    {en:'Restock to-go boxes, bags and sauce cups at stations',es:'Recargar cajas, bolsas y salseras en estaciones'},
+    {en:'Restock straws at stations',es:'Recargar pitillos en estaciones'},
+    {en:'Bring cutlery to host — restock host line',es:'Llevar cubiertos al host — recargar línea del host'},
+  ]}],
+  service:[{type:'service',title:{en:'During Service',es:'Durante el Servicio'},items:[
+    {n:'①',style:'teal',en:'Deliver COMPLETE orders to tables — verify all dishes go out together',es:'Llevar órdenes COMPLETAS a las mesas — verificar que todos los platos salgan juntos'},
+    {n:'②',style:'teal',en:'When full order delivered: notify server "Table X fully delivered"',es:'Al entregar orden completa: comunicar al mesero "Mesa X entregada completa"'},
+    {n:'③',style:'teal',en:'Bus dirty plates and bottles — tables always clean',es:'Recoger platos sucios y botellas — mesas siempre limpias'},
+    {n:'④',style:'teal',en:'When table is cleaned: notify host "Table X available"',es:'Al limpiar una mesa: comunicar al host "Mesa X disponible"'},
+    {n:'⑤',style:'teal',en:'Keep water stations stocked with ice throughout service',es:'Mantener estaciones de agua con hielo durante todo el servicio'},
+    {n:'⑥',style:'teal',en:'Keep ice stocked at soda station throughout service',es:'Mantener hielo en la estación de gaseosa durante todo el servicio'},
+    {n:'⑦',style:'purple',en:'🍺 Bar zone: close coordination with bartender for food delivery',es:'🍺 Zona de barra: coordinación estrecha con el bartender para entregar comida'},
+    {n:'⑧',style:'teal',en:'Restock napkins, straws and sauce cups at stations when running low',es:'Reponer servilletas, pitillos y salseras en estaciones cuando se vean bajas'},
+    {n:'⑨',style:'teal',en:'Bring cutlery to host whenever needed — always anticipate',es:'Llevar cubiertos al host cuando los necesite — siempre anticiparse'},
+  ]}],
+  closing:[{type:'closing',title:{en:'Shift Closing',es:'Cierre de Turno'},items:[
+    {en:'Return all washed trays',es:'Entregar todas las bandejas lavadas'},
+    {en:'Clean service cloths',es:'Trapos del turno limpios'},
+    {en:'Leave water stations empty and clean',es:'Dejar estaciones de agua vacías y limpias'},
+    {en:'Leave table spray bottles full for next shift',es:'Dejar splash llenos y listos para el siguiente turno'},
+    {en:'Take out bathroom trash',es:'Sacar basura de los baños'},
+    {en:'Clock out on the system',es:'Hacer clock-out en el sistema'},
+  ]}],
+};
+const RUNNER_SECTIONS = ['preshift','station','service','closing','summary'];
+
+// ══════════════════════════════════════════
+// STATE & HELPERS
+// ══════════════════════════════════════════
+const ROLE_COLORS = {manager:'#c47d0a', server:'#0a8a62', host:'#1a6abf', runner:'#0a8a62'};
+const ROLE_ICONS  = {manager:'👔', server:'🍺', host:'🎯', runner:'🏃'};
+const ROLE_NAMES  = {
+  en:{manager:'Manager', server:'Server', host:'Host', runner:'Runner'},
+  es:{manager:'Manager', server:'Mesero', host:'Host', runner:'Runner'},
+};
+
+function getRoleT(k){ 
+  if(currentRole==='server') return st(k);
+  if(currentRole==='host')   return ht(k);
+  if(currentRole==='runner') return rt(k);
+  if(currentRole==='manager') return mt(k);
+  return k;
+}
+
+function getSections(){
+  if(currentRole==='manager') return lang==='es'?['apertura','servicio','cierre','resumen']:['opening','service','closing','summary'];
+  if(currentRole==='server')  return SERVER_SECTIONS;
+  if(currentRole==='host')    return HOST_SECTIONS;
+  if(currentRole==='runner')  return RUNNER_SECTIONS;
+  return [];
+}
+
+function getSectionKey(s){
+  // normalize section keys
+  const map = {opening:'apertura',service:'servicio',closing:'cierre',summary:'resumen'};
+  return map[s]||s;
+}
+
+function getBlocks(s){
+  const k = getSectionKey(s);
+  if(currentRole==='manager'){
+    if(k==='apertura') return dayMode==='finde'?MANAGER_DATA.AP_FINDE:MANAGER_DATA.AP_SEMANA;
+    if(k==='servicio') return MANAGER_DATA.SERVICIO;
+    if(k==='cierre')   return MANAGER_DATA.CIERRE;
+    return [];
+  }
+  if(currentRole==='server')  { const d=SERVER_DATA[s]||SERVER_DATA[k]||[]; return d; }
+  if(currentRole==='host')    { const d=HOST_DATA[s]||HOST_DATA[k]||[]; return d; }
+  if(currentRole==='runner')  { const d=RUNNER_DATA[s]||RUNNER_DATA[k]||[]; return d; }
+  return [];
+}
+
+// ══════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════
+const today = new Date().toDateString();
+
+function getSavedUser(){
+  try{ return JSON.parse(localStorage.getItem('bruder_user_v2')||'null'); }catch(e){return null;}
+}
+
+function loginCheck(){
+  const n=(document.getElementById('login-name').value||'').trim();
+  const btn=document.getElementById('login-btn');
+  const valid=n.length>=2;
+  btn.disabled=!valid;
+  btn.style.background=valid?'var(--dark)':'';
+  btn.style.color=valid?'#fff':'';
+  btn.style.opacity=valid?'1':'.6';
+}
+
+function doLogin(){
+  const n=(document.getElementById('login-name').value||'').trim();
+  if(!n||n.length<2){showLoginErr(lang==='en'?'Enter your name':'Ingresa tu nombre');return;}
+  currentUser=n;
+  localStorage.setItem('bruder_user_v2',JSON.stringify({name:n,date:today}));
+  const ls=document.getElementById('login-screen');
+  ls.style.transition='opacity .3s ease';ls.style.opacity='0';
+  setTimeout(()=>ls.style.display='none',320);
+  injectUserBadge(n);
+}
+
+function showLoginErr(msg){
+  const el=document.getElementById('login-error');
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',3000);
+}
+
+function injectUserBadge(name){
+  const right=document.getElementById('topbar-right');
+  const old=document.getElementById('user-badge');if(old)old.remove();
+  const initials=name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+  const badge=document.createElement('div');
+  badge.id='user-badge';
+  badge.style.cssText='display:flex;align-items:center;gap:6px;padding:4px 10px 4px 5px;border-radius:20px;background:var(--surface2);border:0.5px solid var(--border2);cursor:pointer;font-size:11px;color:var(--text2)';
+  badge.innerHTML=`<div style="width:22px;height:22px;border-radius:50%;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">${initials}</div><span style="font-weight:500">${name.split(' ')[0]}</span>`;
+  badge.onclick=()=>{if(confirm(lang==='en'?`Change user from ${name}?`:`¿Cambiar usuario de ${name}?`)){localStorage.removeItem('bruder_user_v2');location.reload();}};
+  right.insertBefore(badge,right.firstChild);
+}
+
+// Check existing session
+(function(){
+  const saved=getSavedUser();
+  if(saved&&saved.date===today&&saved.name){
+    currentUser=saved.name;
+    document.getElementById('login-screen').style.display='none';
+    injectUserBadge(saved.name);
+  }
+})();
+
+// ══════════════════════════════════════════
+// ROLE SELECTION
+// ══════════════════════════════════════════
+function selectRole(role){
+  currentRole=role;
+  curSection=getSections()[0];
+  checks={};
+  dayMode='semana';svcDay='semana';
+
+  // Hide role screen, show checklist
+  document.getElementById('role-screen').style.display='none';
+  document.getElementById('checklist-screen').style.display='flex';
+
+  // Update badge
+  const badge=document.getElementById('cl-badge');
+  badge.className='cl-role-badge '+role;
+  badge.textContent=ROLE_ICONS[role]+' '+(ROLE_NAMES[lang][role]||role);
+
+  // User name
+  const first=currentUser?currentUser.split(' ')[0]:'';
+  document.getElementById('cl-user').textContent=first?'· '+first:'';
+
+  // Day pills for manager only
+  document.getElementById('day-pills').style.display=role==='manager'?'flex':'none';
+
+  renderChecklist();
+}
+
+function goBack(){
+  document.getElementById('checklist-screen').style.display='none';
+  document.getElementById('role-screen').style.display='flex';
+  currentRole=null;
+}
+
+// ══════════════════════════════════════════
+// RENDER CHECKLIST
+// ══════════════════════════════════════════
+function renderChecklist(){
+  buildTabs();
+  updateBrandSub();
+
+  if(curSection==='summary'||curSection==='resumen'){
+    renderSummary();
+    document.getElementById('prog-wrap').style.display='none';
+    return;
+  }
+  if(curSection==='waitlist'){
+    renderWaitlist();
+    document.getElementById('prog-wrap').style.display='none';
+    return;
+  }
+
+  document.getElementById('prog-wrap').style.display='block';
+  const main=document.getElementById('main-content');
+  const blocks=getBlocks(curSection);
+  let html='';
+
+  // Banners
+  if(currentRole==='manager'){
+    const k=getSectionKey(curSection);
+    if(k==='apertura'){
+      const isWeek=dayMode==='semana';
+      html+=`<div class="${isWeek?'warn-banner':'lc-banner'}" style="margin-bottom:8px;display:flex;gap:8px">
+        <span>${isWeek?'⚠':'ℹ'}</span><span>${isWeek?mt('warn_week'):mt('warn_wknd')}</span></div>`;
+    }
+    if(k==='servicio'){
+      const lc=svcDay==='semana'?mt('lc_semana'):svcDay==='viesab'?mt('lc_viesab'):mt('lc_dom');
+      html+=`<div class="svc-days">
+        <button class="svc-day-btn ${svcDay==='semana'?'active':''}" onclick="setSvcDay('semana',this)">${mt('svc_week')}</button>
+        <button class="svc-day-btn ${svcDay==='viesab'?'active':''}" onclick="setSvcDay('viesab',this)">${mt('svc_fs')}</button>
+        <button class="svc-day-btn ${svcDay==='dom'?'active':''}" onclick="setSvcDay('dom',this)">${mt('svc_sun')}</button>
+      </div>
+      <div class="lastcall-banner">${lc}</div>`;
+    }
+  }
+  if(currentRole==='server'&&curSection==='closing'){
+    html+=`<div class="lastcall-banner" style="margin-bottom:8px">${st('lastcall')}</div>`;
+  }
+  if(currentRole==='host'){
+    if(curSection==='preshift'||curSection==='station'){
+      html+=`<div class="policy-banner policy-amber" style="margin-bottom:8px">${ht('golden')}</div>`;
+    }
+    if(curSection==='service'){
+      html+=`<div class="policy-banner policy-pink" style="margin-bottom:8px">${ht('door')}</div>`;
+      html+=`<div class="policy-banner policy-teal" style="margin-bottom:8px">${ht('comm')}</div>`;
+    }
+    if(curSection==='closing'){
+      html+=`<div class="lastcall-banner" style="margin-bottom:8px">${ht('lc')}</div>`;
+    }
+  }
+  if(currentRole==='runner'){
+    if(curSection==='preshift'||curSection==='station'){
+      html+=`<div class="policy-banner policy-teal" style="margin-bottom:8px">${rt('golden')}</div>`;
+    }
+    if(curSection==='service'){
+      html+=`<div class="policy-banner policy-teal" style="margin-bottom:8px">${rt('comm')}</div>`;
+      html+=`<div class="policy-banner policy-purple" style="margin-bottom:8px">${rt('team')}</div>`;
+    }
+    if(curSection==='closing'){
+      html+=`<div class="lastcall-banner" style="margin-bottom:8px">${rt('lc')}</div>`;
+    }
+  }
+
+  blocks.forEach((block,bi)=>{
+    const title=block.title[lang]||block.title.en;
+    const total=block.items.length;
+    const done=block.items.filter((_,ii)=>checks[curSection+'_'+bi+'_'+ii]).length;
+    const timeLabel=block.time||'';
+    html+=`<div class="block-card">
+      <div class="block-head" onclick="toggleBlock('${curSection}_${bi}')">
+        ${timeLabel?`<span class="block-time ${block.badge||'bt-preshift'}">${timeLabel}</span>`:''}
+        <span class="block-title">${title}</span>
+        <span class="block-badge">${done}/${total}</span>
+        <span class="chevron-icon" id="chev-${curSection}_${bi}">⌄</span>
+      </div>
+      <div class="block-body" id="body-${curSection}_${bi}">`;
+
+    // Speech box for server service
+    if(block.speech){
+      html+=`<div style="padding:8px 0">
+        <div class="policy-banner policy-red">${st('policy_water')}</div>
+        <div class="policy-banner policy-green">${st('policy_sales')}</div>
+        <div class="speech-box">
+          <div class="speech-label">${st('speech_label')}</div>
+          <div class="speech-text">${st('speech_main')}</div>
+          <div class="speech-note">${st('speech_note')}</div>
+        </div>
+      </div>`;
+    }
+
+    block.items.forEach((item,ii)=>{
+      const key=curSection+'_'+bi+'_'+ii;
+      const isDone=checks[key]||false;
+      const txt=item[lang]||item.en;
+      const isClosing=curSection==='closing'||curSection==='cierre';
+      const checkedClass=isDone?(isClosing?'checked-amber':'checked'):'';
+
+      if(block.numbered&&item.n){
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${checkedClass}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+          <span class="step-num sn-amber">${item.n}</span>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      } else if(item.n){
+        const sc={blue:'sn-blue',green:'sn-green',teal:'sn-teal',pink:'sn-pink',purple:'sn-purple',amber:'sn-amber'}[item.style]||'sn-teal';
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${checkedClass}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+          <span class="step-num ${sc}">${item.n}</span>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      } else if(item.z){
+        // Manager zone tag
+        const zcMap={bar:'zt-bar',kitchen:'zt-kitchen',salon:'zt-salon',host:'zt-host',all:'zt-all',personal:'zt-personal'};
+        const zlMap=lang==='es'?
+          {bar:'Barra',kitchen:'Cocina',salon:'Salón',host:'Host',all:'General',personal:'Personal'}:
+          {bar:'Bar',kitchen:'Kitchen',salon:'Dining',host:'Host',all:'General',personal:'Personal'};
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${checkedClass}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+          <span class="zt ${zcMap[item.z]||'zt-all'}">${zlMap[item.z]||'General'}</span>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      } else {
+        html+=`<div class="check-item ${isDone?'done':''}" onclick="toggleCheck('${key}')">
+          <div class="ci-box ${checkedClass}" id="chk-${key}"><svg class="ci-check" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+          <span class="ci-text">${txt}</span>
+        </div>`;
+      }
+    });
+    html+=`</div></div>`;
+  });
+
+  main.innerHTML=html;
+  updateProgress();
+}
+
+function buildTabs(){
+  const tabs=document.getElementById('section-tabs');
+  const sections=getSections();
+  tabs.innerHTML=sections.map(s=>{
+    const label=getRoleT(s);
+    const active=s===curSection?`active-${s}`:'';
+    return `<button class="stab ${active}" onclick="switchSection('${s}')">${label}</button>`;
+  }).join('');
+}
+
+function updateBrandSub(){
+  const roleName=ROLE_NAMES[lang][currentRole]||currentRole||'Staff';
+  document.getElementById('brand-sub').textContent=roleName+' Checklist';
+}
+
+function toggleBlock(id){
+  const body=document.getElementById('body-'+id);
+  const chev=document.getElementById('chev-'+id);
+  if(!body)return;
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  if(chev)chev.style.transform=isOpen?'rotate(-90deg)':'rotate(0)';
+}
+
+function toggleCheck(key){
+  checks[key]=!checks[key];
+  renderChecklist();
+}
+
+function switchSection(s){
+  curSection=s;
+  renderChecklist();
+}
+
+function countSection(s){
+  const blocks=getBlocks(s);
+  let total=0,done=0;
+  blocks.forEach((b,bi)=>b.items.forEach((_,ii)=>{total++;if(checks[s+'_'+bi+'_'+ii])done++;}));
+  return{total,done};
+}
+
+function updateProgress(){
+  if(curSection==='summary'||curSection==='resumen'||curSection==='waitlist')return;
+  const{total,done}=countSection(curSection);
+  const pct=total>0?Math.round(done/total*100):0;
+  const fill=document.getElementById('prog-fill');
+  fill.style.width=pct+'%';
+  fill.className='pbar-fill fill-'+curSection;
+  document.getElementById('prog-count').textContent=done+' / '+total+getRoleT('tasks');
+  document.getElementById('prog-label').textContent=getRoleT(curSection);
+}
+
+function renderSummary(){
+  const main=document.getElementById('main-content');
+  const sections=getSections().filter(s=>s!=='summary'&&s!=='resumen'&&s!=='waitlist');
+  let html='<div class="res-grid">';
+  let gt=0,gd=0;
+  const colors=['var(--amber)','var(--teal)','var(--blue)','var(--amber)','var(--pink)'];
+  sections.forEach((s,i)=>{
+    const{total,done}=countSection(s);
+    gt+=total;gd+=done;
+    const pct=total>0?Math.round(done/total*100):0;
+    html+=`<div class="res-card"><div class="res-val" style="color:${colors[i]}">${pct}%</div><div class="res-lbl">${getRoleT(s)} · ${done}/${total}</div></div>`;
+  });
+  const tp=gt>0?Math.round(gd/gt*100):0;
+  html+=`<div class="res-card res-total"><div class="res-val">${tp}%</div><div class="res-lbl">${getRoleT('summary')} · ${gd}/${gt}</div></div></div>`;
+  html+=`<div class="pend-title">${getRoleT('pending')}</div>`;
+  let any=false;
+  sections.forEach(s=>{
+    getBlocks(s).forEach((block,bi)=>{
+      block.items.forEach((item,ii)=>{
+        if(!checks[s+'_'+bi+'_'+ii]){
+          any=true;
+          const txt=item[lang]||item.en;
+          html+=`<div class="pend-item"><span class="pend-time">${getRoleT(s)}</span><span style="font-size:12px;color:var(--text2);flex:1">${txt}</span></div>`;
+        }
+      });
+    });
+  });
+  if(!any)html+=`<div style="padding:16px 0;font-size:14px;color:var(--teal)">${getRoleT('allDone')}</div>`;
+  main.innerHTML=html;
+}
+
+function renderWaitlist(){
+  const headers=lang==='en'?['#','Name','Phone','Guests','Arrived','Called','Status']:
+    ['#','Nombre','Teléfono','Personas','Llegó','Llamado','Estado'];
+  let html=`<div class="policy-banner policy-blue" style="margin-bottom:12px">${ht('wait')}</div>`;
+  html+=`<div class="block-card"><div style="padding:12px;overflow-x:auto">
+    <table class="waitlist-table"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  for(let i=1;i<=12;i++){
+    html+=`<tr><td class="num">${i}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+  }
+  html+=`</tbody></table></div></div>`;
+  document.getElementById('main-content').innerHTML=html;
+}
+
+function setDay(mode,btn){
+  dayMode=mode;
+  document.querySelectorAll('.day-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChecklist();
+}
+
+function setSvcDay(d,btn){
+  svcDay=d;
+  renderChecklist();
+}
+
+function resetRole(){
+  const msg=lang==='en'?'Reset all progress for this shift?':'¿Reiniciar todo el progreso de este turno?';
+  if(confirm(msg)){checks={};curSection=getSections()[0];renderChecklist();}
+}
+
+// ══════════════════════════════════════════
+// LANGUAGE SWITCH
+// ══════════════════════════════════════════
+function setLang(l,btn){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateUI();
+  if(currentRole) renderChecklist();
+}
+
+function updateUI(){
+  document.getElementById('hero-title').textContent=u('heroTitle');
+  document.getElementById('hero-sub').textContent=u('heroSub');
+  document.getElementById('rc-manager').textContent=u('rcManager');
+  document.getElementById('rcd-manager').textContent=u('rcdManager');
+  document.getElementById('rc-server').textContent=u('rcServer');
+  document.getElementById('rcd-server').textContent=u('rcdServer');
+  document.getElementById('rc-host').textContent=u('rcHost');
+  document.getElementById('rcd-host').textContent=u('rcdHost');
+  document.getElementById('rc-runner').textContent=u('rcRunner');
+  document.getElementById('rcd-runner').textContent=u('rcdRunner');
+  document.getElementById('lbl-name').textContent=u('lblName');
+  document.getElementById('lbl-start').textContent=u('lblStart');
+  document.getElementById('lbl-saved').textContent=u('lblSaved');
+  document.getElementById('btn-reset').textContent=u('btnReset');
+  document.getElementById('btn-print').textContent=u('btnPrint');
+  document.getElementById('dp-week').textContent=u('dpWeek');
+  document.getElementById('dp-wknd').textContent=u('dpWknd');
+  updateGreeting();
+  if(currentRole){
+    const badge=document.getElementById('cl-badge');
+    if(badge) badge.textContent=ROLE_ICONS[currentRole]+' '+(ROLE_NAMES[lang][currentRole]||currentRole);
+  }
+}
+
+// ══════════════════════════════════════════
+// DATETIME & GREETING
+// ══════════════════════════════════════════
+function updateGreeting(){
+  const h=new Date().getHours();
+  const key=h<12?'greeting_morning':h<18?'greeting_afternoon':'greeting_evening';
+  const el=document.getElementById('greeting');
+  if(el) el.textContent=u(key);
+}
+
+function updateClock(){
+  const d=new Date();
+  const h=d.getHours().toString().padStart(2,'0');
+  const m=d.getMinutes().toString().padStart(2,'0');
+  document.getElementById('clock').textContent=h+':'+m;
+
+  const DAYS_EN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const DAYS_ES=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTHS_ES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const days=lang==='es'?DAYS_ES:DAYS_EN;
+  const months=lang==='es'?MONTHS_ES:MONTHS_EN;
+  const dtEl=document.getElementById('dt-text');
+  if(dtEl) dtEl.textContent=days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];
+}
+
+updateClock();
+setInterval(updateClock,30000);
+updateUI();
+</script>
+</body>
+</html>
